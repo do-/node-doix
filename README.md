@@ -1,2 +1,3 @@
 # node-doix
-a js framework
+
+The code in this repository is at early alpha stage.
