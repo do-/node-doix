@@ -1,0 +1,35 @@
+{
+  "name": "doix",
+  "version": "0.0.1",
+  "description": "The code in this repository is at early alpha stage.",
+  "main": "index.js",
+  "files": ["/lib"],
+  "scripts": {
+    "test": "jest",
+    "test-ci": "jest --ci --coverage"
+  },
+  "jest": {
+	"collectCoverageFrom": [
+		"lib/**/*.js"
+	],
+	"coverageReporters": ["clover", "json", "lcov", "text", "json-summary"],
+  	"verbose": false,
+  	"testPathIgnorePatterns": [
+  		"/node_modules/",
+  		"/__tests__/lib"
+  	]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/do-/node-doix.git"
+  },
+  "author": "Dmitry Ovsyanko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/do-/node-doix/issues"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
+  },
+  "homepage": "https://github.com/do-/node-doix#readme"
+}
