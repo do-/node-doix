@@ -106,20 +106,3 @@ test ('scalar-scalar 2', () => {
 	expect (() => om.merge (t1, t2)).toThrow ()
 
 })
-
-test ('modules', () => {
-
-	const m = om.merge ({
-		type: 'users',
-		get_item: () => ({id: 1})
-	}, {
-		select: () => [1, 2].map (id => ({id}))
-	})
-
-	expect (m.type).toBe ('users')
-
-	expect (m.get_item ()).toStrictEqual ({id: 1})
-
-	expect (m.select ()).toStrictEqual ([m.get_item (), {id: 2}])
-
-})
