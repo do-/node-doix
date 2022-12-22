@@ -19,6 +19,26 @@ test ('files', () => {
 
 	expect ([...FilePaths ({
 			dir: DirPaths ({
+				root: ['root1', 'root2'].map (i => Path.join (__dirname, 'data', i)),
+				filter: (s, a) => a.at (-2) === 'dw'
+			}),
+			filter: 'tb_houses.js',
+			
+		}) 
+	]).toHaveLength (4)
+
+	expect ([...FilePaths ({
+			dir: DirPaths ({
+				root: ['root1', 'root2'].map (i => Path.join (__dirname, 'data', i)),
+				filter: (s, a) => a.at (-2) === 'dw'
+			}),
+			filter: 'vw_houses.js',
+			
+		}) 
+	]).toHaveLength (0)
+
+	expect ([...FilePaths ({
+			dir: DirPaths ({
 				root: Path.join (__dirname, 'data', 'root2'),
 				filter: (s, a) => a.at (-2) === 'dw'
 			})
