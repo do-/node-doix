@@ -8,6 +8,10 @@ test ('dir', () => {
 	expect (() => {DirPaths ()}).toThrow ()
 
 	expect (() => {DirPaths ({
+		root: NaN,
+	})}).toThrow ()
+
+	expect (() => {DirPaths ({
 		root: r (), 
 		filter: Infinity
 	})}).toThrow ()
