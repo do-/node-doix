@@ -1,4 +1,12 @@
 const {ModuleMap, ObjectMerger} = require ('..')
+const Path = require ('path')
+
+const r = () => ['root1', 'root2'].map (i => Path.join (__dirname, 'data', i))
+
+const dir = {
+	root: r (),
+	filter: (s, a) => a.at (-2) === 'oltp'
+}
 
 class MyObjectMerger extends ObjectMerger {
 	merge () {
@@ -21,9 +29,13 @@ const mr = () => ({
 
 test ('constructor', () => {
 
-	expect (
+	expect (() => {
 		new ModuleMap ()
-	).toBeInstanceOf (ModuleMap)
+	}).toThrow ()
+
+	expect (() => {
+		new ModuleMap ({})
+	}).toThrow ()
 
 	expect (() => {
 		new ModuleMap (1)
@@ -43,19 +55,29 @@ test ('constructor', () => {
 
 	expect (
 		new ModuleMap ({
+			dir,
 			merger: new ObjectMerger ()
 		})
 	).toBeInstanceOf (ModuleMap)
 
 	expect (
 		new ModuleMap ({
+			dir,
 			merger: new MyObjectMerger ()
 		})
 	).toBeInstanceOf (ModuleMap)
 
 	expect (() => {
 		new ModuleMap ({
+			dir,
 			merger: new ModuleMap ()
+		})
+	}).toThrow ()
+
+	expect (() => {
+		new ModuleMap ({
+			dir,
+			ext: 0,
 		})
 	}).toThrow ()
 
@@ -63,7 +85,9 @@ test ('constructor', () => {
 
 test ('set', () => {
 
-	const m = new ModuleMap ()
+	const m = new ModuleMap ({
+		dir,
+	})
 
 	expect (() => {
 		m.set (1, mu1 ())
@@ -107,6 +131,7 @@ test ('set', () => {
 test ('custom merge', () => {
 
 	const m = new ModuleMap ({
+		dir,
 		merger: new MyObjectMerger ()
 	})
 
@@ -127,5 +152,24 @@ test ('custom merge', () => {
 	expect (users).not.toHaveProperty ('select')
 
 	expect (roles.select ()).toStrictEqual ([{name: 'operator'}])
+
+})
+
+test ('get', () => {
+
+	const g = (k, ext) => new ModuleMap ({dir, ext}).get (k)
+	
+	expect (g ('tb_houses')).toStrictEqual ({
+		columns: {
+			root1_oltp: 1,
+			root1_crm_oltp: 1,
+			root1_hr_oltp: 1,
+			root2_hr_oltp: 1
+		}
+	})
+
+	expect (() => g ('tb_houses', '.txt')).toThrow ()
+	expect (() => g ('vw_houses')).toThrow ()
+	expect (() => g (0)).toThrow ()
 
 })
