@@ -26,8 +26,6 @@ test ('bad', () => {
 })
 
 test ('live', () => {
-
-console.log (x)
 	
 	const dir = new DirList ({
 		root: r (),

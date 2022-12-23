@@ -1,4 +1,4 @@
-const {ModuleMergingMap, ObjectMerger} = require ('..')
+const {ModuleMap, ObjectMerger} = require ('..')
 
 class MyObjectMerger extends ObjectMerger {
 	merge () {
@@ -22,40 +22,40 @@ const mr = () => ({
 test ('constructor', () => {
 
 	expect (
-		new ModuleMergingMap ()
-	).toBeInstanceOf (ModuleMergingMap)
+		new ModuleMap ()
+	).toBeInstanceOf (ModuleMap)
 
 	expect (() => {
-		new ModuleMergingMap (1)
+		new ModuleMap (1)
 	}).toThrow ()
 
 	expect (() => {
-		new ModuleMergingMap ({
+		new ModuleMap ({
 			id: 1
 		})
 	}).toThrow ()
 
 	expect (() => {
-		new ModuleMergingMap ({
+		new ModuleMap ({
 			merger: null
 		})
 	}).toThrow ()
 
 	expect (
-		new ModuleMergingMap ({
+		new ModuleMap ({
 			merger: new ObjectMerger ()
 		})
-	).toBeInstanceOf (ModuleMergingMap)
+	).toBeInstanceOf (ModuleMap)
 
 	expect (
-		new ModuleMergingMap ({
+		new ModuleMap ({
 			merger: new MyObjectMerger ()
 		})
-	).toBeInstanceOf (ModuleMergingMap)
+	).toBeInstanceOf (ModuleMap)
 
 	expect (() => {
-		new ModuleMergingMap ({
-			merger: new ModuleMergingMap ()
+		new ModuleMap ({
+			merger: new ModuleMap ()
 		})
 	}).toThrow ()
 
@@ -63,7 +63,7 @@ test ('constructor', () => {
 
 test ('set', () => {
 
-	const m = new ModuleMergingMap ()
+	const m = new ModuleMap ()
 
 	expect (() => {
 		m.set (1, mu1 ())
@@ -106,7 +106,7 @@ test ('set', () => {
 
 test ('custom merge', () => {
 
-	const m = new ModuleMergingMap ({
+	const m = new ModuleMap ({
 		merger: new MyObjectMerger ()
 	})
 
