@@ -1,5 +1,5 @@
 const Path = require ('path')
-const {DirPaths, FilePaths} = require ('..')
+const {DirList, FilePaths} = require ('..')
 
 const p = Path.join (__dirname, 'data', 'root1', 'back', 'lib', 'Model', 'dw', '2_entities')
 
@@ -10,7 +10,7 @@ test ('files', () => {
 	expect (() => {FilePaths ({dir: -1}).next ()}).toThrow ()
 
 	expect ([...FilePaths ({
-			dir: DirPaths ({
+			dir: new DirList ({
 				root: ['root1', 'root2'].map (i => Path.join (__dirname, 'data', i)),
 				filter: (s, a) => a.at (-2) === 'dw'
 			})
@@ -18,7 +18,7 @@ test ('files', () => {
 	]).toHaveLength (4)
 
 	expect ([...FilePaths ({
-			dir: DirPaths ({
+			dir: new DirList ({
 				root: ['root1', 'root2'].map (i => Path.join (__dirname, 'data', i)),
 				filter: (s, a) => a.at (-2) === 'dw'
 			}),
@@ -28,7 +28,7 @@ test ('files', () => {
 	]).toHaveLength (4)
 
 	expect ([...FilePaths ({
-			dir: DirPaths ({
+			dir: new DirList ({
 				root: ['root1', 'root2'].map (i => Path.join (__dirname, 'data', i)),
 				filter: (s, a) => a.at (-2) === 'dw'
 			}),
@@ -38,7 +38,7 @@ test ('files', () => {
 	]).toHaveLength (0)
 
 	expect ([...FilePaths ({
-			dir: DirPaths ({
+			dir: new DirList ({
 				root: Path.join (__dirname, 'data', 'root2'),
 				filter: (s, a) => a.at (-2) === 'dw'
 			})
@@ -46,7 +46,7 @@ test ('files', () => {
 	]).toHaveLength (1)
 
 	expect ([...FilePaths ({
-			dir: DirPaths ({
+			dir: new DirList ({
 				root: Path.join (__dirname, 'data', 'root2'),
 			}),
 			filter: () => false

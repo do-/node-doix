@@ -16,12 +16,38 @@ function x_on () {
 	if (!fs.existsSync (x)) fs.mkdirSync (x)
 }
 
+test ('constructor', () => {
 
-test ('bad', () => {
+	expect (() => [...(new DirList (
+	))]).toThrow ()
 
-	const dir = new DirList ()
+	expect (() => [...(new DirList ({
+		root: NaN,
+	}))]).toThrow ()
 
-	expect (() => dir.paths).toThrow ()
+	expect (() => [...(new DirList ({
+		root: r (), 
+		filter: Infinity
+	}))]).toThrow ()
+
+	expect (() => [...(new DirList ({
+		root: r (), 
+		filter: Infinity
+	}))]).toThrow ()	
+	
+	expect ([...(new DirList ({
+		root: r ()[1], 
+	}))]).toHaveLength (10)
+	
+	expect ([...(new DirList ({
+		root: r (), 
+		filter: (s, a) => a.at (-2) === 'dw'
+	}))]).toHaveLength (4)
+
+	expect ([...(new DirList ({
+		root: r ()[1], 
+		filter: (s, a) => a.at (-2) === 'dw'
+	}))]).toHaveLength (1)
 
 })
 
@@ -33,15 +59,15 @@ test ('live', () => {
 
 	x_off ()
 
-	expect ([...dir.paths]).toHaveLength (N)
+	expect ([...dir]).toHaveLength (N)
 
 	x_on ()
 
-	expect ([...dir.paths]).toHaveLength (N + 1)
+	expect ([...dir]).toHaveLength (N + 1)
 
 	x_off ()
 
-	expect ([...dir.paths]).toHaveLength (N)
+	expect ([...dir]).toHaveLength (N)
 
 })
 
@@ -54,14 +80,14 @@ test ('!live', () => {
 
 	x_off ()
 
-	expect ([...dir.paths]).toHaveLength (N)
+	expect ([...dir]).toHaveLength (N)
 
 	x_on ()
 
-	expect ([...dir.paths]).toHaveLength (N)
+	expect ([...dir]).toHaveLength (N)
 
 	x_off ()
 
-	expect ([...dir.paths]).toHaveLength (N)
+	expect ([...dir]).toHaveLength (N)
 
 })
