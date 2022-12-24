@@ -198,3 +198,54 @@ test ('load', () => {
 	}
 
 })
+
+test ('load complete', () => {
+
+	const m = new ModuleMap ({dir})
+			
+	m.load ()
+
+	expect ([...m.values ()]).toStrictEqual ([{
+		columns: {
+			root1_oltp: 1,
+			root1_crm_oltp: 1,
+			root1_hr_oltp: 1,
+			root2_hr_oltp: 1
+		}
+	}])
+
+	m.merger.on ('complete', (o, name) => o.name = name)
+
+	m.load ()
+
+	expect ([...m.values ()]).toStrictEqual ([{
+		name: 'tb_houses',
+		columns: {
+			root1_oltp: 1,
+			root1_crm_oltp: 1,
+			root1_hr_oltp: 1,
+			root2_hr_oltp: 1
+		}
+	}])
+
+})
+
+test ('get complete', () => {
+
+	const m = new ModuleMap ({dir})
+			
+	m.merger.on ('complete', (o, name) => o.name = name)
+	
+	const name = 'tb_houses'
+
+	expect (m.get (name)).toStrictEqual ({
+		name,
+		columns: {
+			root1_oltp: 1,
+			root1_crm_oltp: 1,
+			root1_hr_oltp: 1,
+			root2_hr_oltp: 1
+		}
+	})
+
+})
