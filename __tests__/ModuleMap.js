@@ -173,3 +173,28 @@ test ('get', () => {
 	expect (() => g (0)).toThrow ()
 
 })
+
+test ('load', () => {
+
+	const m = new ModuleMap ({dir})
+	
+	expect (m.size).toBe (0)
+	
+	for (const i of [0, 1]) {
+	
+		m.load ()
+		
+		expect ([...m.keys ()]).toStrictEqual (['tb_houses'])
+		
+		expect ([...m.values ()]).toStrictEqual ([{
+			columns: {
+				root1_oltp: 1,
+				root1_crm_oltp: 1,
+				root1_hr_oltp: 1,
+				root2_hr_oltp: 1
+			}
+		}])
+	
+	}
+
+})
