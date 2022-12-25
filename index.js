@@ -4,4 +4,5 @@ module.exports = {
 	ModuleLoader: require ('./lib/ModuleLoader.js'),
 	DirList: require ('./lib/DirList.js'),
 	FilePaths: require ('./lib/FilePaths.js'),
+	MethodSelector: require ('./lib/MethodSelector.js'),
 }
