@@ -24,11 +24,9 @@ test ('constructor', () => {
 test ('job 0', async () => {
 	
 	const app = new Application ({modules})
-	const job = new Job ()
-	
-	job.app = app
-	
-	const r = await job.start ()
+	const job = app.createJob ()
+		
+	const r = await job.toComplete ()
 	
 	expect (r).toBeUndefined ()
 
@@ -39,24 +37,23 @@ test ('job ok', async () => {
 	const id = 28
 	
 	const app = new Application ({modules})
-	const job = new Job ()
+	const job = app.createJob ()
 	
-	job.app = app
 	job.rq.type = 'users'
 	job.rq.id = id
 	
 	const a = async () => {}
 	
 	job.on ('start', () => {
-		job.todo.push (a ())
+		job.waitFor (a ())
 	})
 
 	job.on ('end', () => {
-		job.todo.push (a ())
-		job.todo.push (a ())
+		job.waitFor (a ())
+		job.waitFor (a ())
 	})
-	
-	const r = await job.start ()
+
+	const r = await job.toComplete ()
 
 	expect (r).toStrictEqual ({id})
 
@@ -67,7 +64,7 @@ test ('job fail', async () => {
 	const id = 28
 	
 	const app = new Application ({modules})
-	const job = new Job ()
+	const job = app.createJob ()
 	
 	job.app = app
 	job.rq.type = 'users'
@@ -75,6 +72,6 @@ test ('job fail', async () => {
 	
 	job.on ('error', e => {})
 	
-	await expect (() => job.start ()).rejects.toBeDefined ()
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 	
 })
