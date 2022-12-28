@@ -75,3 +75,14 @@ test ('job fail', async () => {
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 	
 })
+
+test ('job fail 2', async () => {
+
+	const app = new Application ({modules})
+	const job = app.createJob ()
+
+	job.on ('start', j => j.fail (Error ('OK')))
+		
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	
+})
