@@ -7,4 +7,5 @@ module.exports = {
 	DirList: require ('./lib/DirList.js'),
 	FilePaths: require ('./lib/FilePaths.js'),
 	MethodSelector: require ('./lib/MethodSelector.js'),
+	Router: require ('./lib/Router.js'),
 }
