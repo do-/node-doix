@@ -1,5 +1,5 @@
 const Path = require ('path')
-const {Application, MethodSelector, Job} = require ('..')
+const {Application, MethodSelector, Job, JobSource} = require ('..')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
@@ -85,4 +85,28 @@ test ('job fail 2', async () => {
 		
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 	
+})
+
+test ('job src fail', async () => {
+
+	const app = new Application ({modules})
+
+	const jobSource0 = new JobSource (app)
+
+	const jobSource = new JobSource (app, {
+		on: {
+			start: j => j.fail (Error ('OK')),
+			error: [
+				j => j,
+				j => j,
+			]
+		},
+	})
+
+	const job = app.createJob ()
+	
+	jobSource.addHandlers (job)
+
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+
 })

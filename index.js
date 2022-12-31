@@ -1,6 +1,7 @@
 module.exports = {
 	Application: require ('./lib/Application.js'),
 	Job: require ('./lib/Job.js'),
+	JobSource: require ('./lib/JobSource.js'),
 	ObjectMerger: require ('./lib/ObjectMerger.js'),
 	ModuleMap: require ('./lib/ModuleMap.js'),
 	ModuleLoader: require ('./lib/ModuleLoader.js'),

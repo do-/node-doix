@@ -7,7 +7,7 @@ class Marker {
 		this.label = label
 	}
 
-	check (m) {
+	test (m) {
 		return m.id == this.id
 	}
 
