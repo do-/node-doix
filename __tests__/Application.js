@@ -105,7 +105,7 @@ test ('job src fail', async () => {
 
 	const job = app.createJob ()
 	
-	jobSource.addHandlers (job)
+	jobSource.copyHandlersTo (job)
 
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 
