@@ -91,6 +91,19 @@ test ('job fail 2', async () => {
 	
 })
 
+test ('job fail undefined', async () => {
+
+	const app = new Application ({modules})
+	const job = app.createJob ()
+
+	job.on ('error', j => delete j.error)
+	job.on ('start', j => j.fail (Error ('OK')))
+		
+	const r = await job.toComplete ()	
+	expect (r).toBeUndefined ()
+	
+})
+
 test ('job src fail', async () => {
 
 	const app = new Application ({modules})
