@@ -74,6 +74,10 @@ test ('job fail', async () => {
 	
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 	
+	job.rq.action = 'delete'
+
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+
 })
 
 test ('job fail 2', async () => {
