@@ -131,8 +131,12 @@ test ('job src fail', async () => {
 	const app = new Application ({modules})
 
 	const jobSource0 = new JobSource (app)
+	
+	const o = {}
 
 	const jobSource = new JobSource (app, {
+		globals: {o},
+		generators: {oo: () => o},
 		on: {
 			start: j => j.fail (Error ('OK')),
 			error: [
@@ -144,7 +148,13 @@ test ('job src fail', async () => {
 
 	const job = app.createJob ()
 	
+	expect (job.o).toBeUndefined
+	expect (job.oo).toBeUndefined
+
 	jobSource.copyHandlersTo (job)
+	
+	expect (job.o).toBe (o)
+	expect (job.oo).toBe (o)
 
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 
