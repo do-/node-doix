@@ -21,6 +21,28 @@ test ('constructor', () => {
 
 })
 
+test ('globals', async () => {
+
+	const o = {}
+	
+	const app = new Application ({modules, globals: {o}})
+	const job = app.createJob ()
+			
+	expect (job.o).toBe (o)
+
+})
+
+test ('generators', async () => {
+
+	const o = {}
+	
+	const app = new Application ({modules, generators: {o: () => o}})
+	const job = app.createJob ()
+
+	expect (job.o).toBe (o)
+
+})
+
 test ('job 0', async () => {
 	
 	const app = new Application ({modules})
