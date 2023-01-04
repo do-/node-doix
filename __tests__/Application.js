@@ -25,10 +25,10 @@ test ('globals', async () => {
 
 	const o = {}
 	
-	const app = new Application ({modules, globals: {o}})
+	const app = new Application ({modules, globals: {logger: o}})
 	const job = app.createJob ()
 			
-	expect (job.o).toBe (o)
+	expect (job.logger).toBe (o)
 
 })
 
@@ -36,6 +36,9 @@ test ('generators', async () => {
 	
 	const app = new Application ({modules, generators: {uuid: () => '00000000-0000-0000-0000-000000000000'}})
 	const job = app.createJob ()
+
+	job.logger.log ({message: 'test'})
+	job.logger.log ({})
 
 	expect (job.uuid).toBe ('00000000-0000-0000-0000-000000000000')
 

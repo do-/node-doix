@@ -1,5 +1,6 @@
 module.exports = {
 	Application: require ('./lib/Application.js'),
+	ConsoleLogger: require ('./lib/ConsoleLogger.js'),
 	Job: require ('./lib/Job.js'),
 	JobSource: require ('./lib/JobSource.js'),
 	ObjectMerger: require ('./lib/ObjectMerger.js'),
