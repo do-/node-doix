@@ -33,13 +33,11 @@ test ('globals', async () => {
 })
 
 test ('generators', async () => {
-
-	const o = {}
 	
-	const app = new Application ({modules, generators: {o: () => o}})
+	const app = new Application ({modules, generators: {uuid: () => '00000000-0000-0000-0000-000000000000'}})
 	const job = app.createJob ()
 
-	expect (job.o).toBe (o)
+	expect (job.uuid).toBe ('00000000-0000-0000-0000-000000000000')
 
 })
 
