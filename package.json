@@ -1,6 +1,6 @@
 {
   "name": "doix",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "The code in this repository is at early alpha stage.",
   "main": "index.js",
   "files": ["/lib", "/badges"],
