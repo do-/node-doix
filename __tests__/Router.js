@@ -97,7 +97,7 @@ test ('Router error', () => {
 	
 	let msg
 	
-	r.on ('error', e => msg = e.message)
+	r.on ('error', (_, e) => msg = e.message)
 	
 	r.process ({id: 1})
 
@@ -132,7 +132,7 @@ test ('Router error 2', () => {
 	r.add (p)
 	r.add ({})
 
-	r.on ('error', e => msg = e.message)
+	r.on ('error', (_, e) => msg = e.message)
 
 	r.process ({id: 1})	
 
