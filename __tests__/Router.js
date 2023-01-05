@@ -1,8 +1,10 @@
+const EventEmitter = require ('events')
 const {Router} = require ('..')
 
-class Marker {
+class Marker extends EventEmitter {
 
 	constructor (id, label) {
+		super ()
 		this.id = id
 		this.label = label
 	}
@@ -21,7 +23,9 @@ test ('Router 1', () => {
 
 	const r = new Router ()
 	
-	r.add (new Marker (1, 'one'))
+	const p = new Marker (1, 'one')
+	
+	r.add (p)
 	
 	let m = {id: 1}
 	
@@ -62,5 +66,76 @@ test ('Router A', () => {
 	r.process (m)	
 	
 	expect (m).toStrictEqual ({id: 1, label: '???'})
+
+})
+
+class BotchedProcessor extends EventEmitter {
+
+	constructor () {
+		super ()
+	}
+
+	process () {
+		this.emit ('error', new Error ('OK'))
+	}
+
+}
+
+test ('Router error', () => {
+
+	const r = new Router ()
+	
+	const p = new BotchedProcessor ()
+	
+	r.add (p)
+	
+	expect (p.listenerCount ('error')).toBe (0)
+	
+	r.listen ()
+	
+	expect (p.listenerCount ('error')).toBe (1)
+	
+	let msg
+	
+	r.on ('error', e => msg = e.message)
+	
+	r.process ({id: 1})
+
+	expect (msg).toBe ('OK')
+
+	r.add (p)
+	r.add ({})
+	r.listen ()
+
+})
+
+class BrokenProcessor extends EventEmitter {
+
+	constructor () {
+		super ()
+	}
+
+	process () {
+		throw Error ('OK')
+	}
+
+}
+
+test ('Router error 2', () => {
+
+	const r = new Router ()
+
+	let msg
+
+	const p = new BrokenProcessor ()
+
+	r.add (p)
+	r.add ({})
+
+	r.on ('error', e => msg = e.message)
+
+	r.process ({id: 1})	
+
+	expect (msg).toBe ('OK')
 
 })
