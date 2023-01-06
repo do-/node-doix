@@ -1,5 +1,8 @@
 const EventEmitter = require ('events')
-const {ResourcePool} = require ('..')
+const Path = require ('path')
+const {ResourcePool, Application, MethodSelector, Job, JobSource} = require ('..')
+
+const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
 class MockResource {	
 	constructor (raw) {
@@ -86,6 +89,24 @@ test ('proxy', async () => {
 
 	expect (pool.cnt).toBe (0)
 
+	expect (await job.db.do ()).toBe ('done')
+
+	job.emit ('finish')
+
+	expect (pool.cnt).toBe (0)
+
+})
+
+test ('app pools', async () => {
+
+	const o = {}
+	
+	const pool = new MockPool ()
+
+	const app = new Application ({modules, pools: {db: pool}})
+
+	const job = app.createJob ()
+			
 	expect (await job.db.do ()).toBe ('done')
 
 	job.emit ('finish')
