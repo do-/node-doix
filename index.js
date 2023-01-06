@@ -12,4 +12,5 @@ module.exports = {
 	Router: require ('./lib/Router.js'),
 	EventLogger: require ('./lib/EventLogger.js'),
 	JobEventLogger: require ('./lib/JobEventLogger.js'),
+	ResourcePool: require ('./lib/ResourcePool.js'),
 }
