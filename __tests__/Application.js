@@ -60,6 +60,17 @@ test ('eventLoggerClass', async () => {
 
 })
 
+test ('logger', async () => {
+
+	const logger = {}
+	
+	const app = new Application ({modules, logger, globals: {eventLogger: null}})
+	const job = app.createJob ()
+			
+	expect (job.logger).toBe (logger)
+
+})
+
 test ('job 0', async () => {
 	
 	const app = new Application ({modules, globals: {eventLogger: null}})
