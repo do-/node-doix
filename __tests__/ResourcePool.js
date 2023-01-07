@@ -29,6 +29,64 @@ class MockPool extends ResourcePool {
 	}
 }	
 
+test ('job logger', async () => {
+
+	const pool = new MockPool ()
+
+	const job = new EventEmitter ()
+	
+	const logger = {}
+	
+	job.logger = logger
+	
+	await pool.toSet (job, 'db')
+	
+	expect (job.db.logger).toBe (logger)
+
+})
+
+test ('pool logger', async () => {
+
+	const logger = {}
+
+	class MockResource2 extends MockResource {	
+		constructor (raw) {
+			super (raw)
+			this.logger = logger
+		}
+	}
+
+	class MockPool2 extends MockPool {	
+		constructor () {
+			super ()
+			this.wrapper = MockResource2
+		}
+	}
+
+	const pool = new MockPool2 ()
+
+	const job = new EventEmitter ()
+		
+	await pool.toSet (job, 'db')
+	
+	expect (job.db.logger).toBe (logger)
+
+})
+
+test ('event logger', async () => {
+
+	const pool = new MockPool ()
+	
+	pool.eventLoggerClass = class {constructor (r) {this.r = r}}
+
+	const job = new EventEmitter ()
+	
+	await pool.toSet (job, 'db')
+	
+	expect (job.db.eventLogger.r).toBe (job.db)
+
+})
+
 test ('set OK', async () => {
 
 	const pool = new MockPool ()
