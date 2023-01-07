@@ -81,7 +81,7 @@ test ('test error string', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('error', job)
+	job.emit ('error', job, job.error)
 	
 	expect (job.messages).toStrictEqual ([{level: 'error', message: '00000000-0000-0000-0000-000000000000 1'}])
 
@@ -95,7 +95,7 @@ test ('test error object', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('error', job)
+	job.emit ('error', job, job.error)
 	
 	expect (job.messages).toHaveLength (1)
 	expect (job.messages [0].level).toBe ('error')
