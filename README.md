@@ -1,4 +1,4 @@
-![workflow](https://github.com/do-/node-doix/actions/workflows/main.yml/badge.svg)
+![workflow](https://github.com/do-/node-doix/actions/workflows/main.yaml/badge.svg)
 ![Jest coverage](./badges/coverage-jest%20coverage.svg)
 
 # node-doix
