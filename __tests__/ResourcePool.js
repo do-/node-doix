@@ -90,12 +90,16 @@ test ('event logger', async () => {
 test ('set OK', async () => {
 
 	const pool = new MockPool ()
+	
+	pool.globals = {ten: 10}
 
 	const job = new EventEmitter ()
 	
 	expect (pool.cnt).toBe (0)
 
 	await pool.toSet (job, 'db')
+
+	expect (job.db.ten).toBe (10)
 	
 	expect (pool.cnt).toBe (1)
 	
@@ -139,6 +143,8 @@ test ('proxy', async () => {
 
 	const pool = new MockPool ()
 
+	pool.globals = {ten: 10}
+
 	const job = new EventEmitter ()
 	
 	expect (pool.cnt).toBe (0)
@@ -147,7 +153,11 @@ test ('proxy', async () => {
 
 	expect (pool.cnt).toBe (0)
 
+	expect (job.db.ten).toBe (10)
+
 	expect (await job.db.do ()).toBe ('done')
+
+	expect (job.db.ten).toBe (10)
 
 	job.emit ('finish')
 
