@@ -17,6 +17,13 @@ class MockResource {
 	}
 }
 
+class MockResourceRoman extends MockResource {	
+	constructor (raw) {
+		super (raw)
+		this.ten = 'X'
+	}
+}
+
 class MockPool extends ResourcePool {
 	constructor () {
 		super ()
@@ -91,7 +98,9 @@ test ('set OK', async () => {
 
 	const pool = new MockPool ()
 	
-	pool.globals = {ten: 10}
+	pool.ten = 10
+	pool.shared.add ('ten')
+	pool.wrapper = MockResourceRoman
 
 	const job = new EventEmitter ()
 	
@@ -99,7 +108,7 @@ test ('set OK', async () => {
 
 	await pool.toSet (job, 'db')
 
-	expect (job.db.ten).toBe (10)
+	expect (job.db.ten).toBe ('X')
 	
 	expect (pool.cnt).toBe (1)
 	
@@ -143,7 +152,8 @@ test ('proxy', async () => {
 
 	const pool = new MockPool ()
 
-	pool.globals = {ten: 10}
+	pool.ten = 10
+	pool.shared.add ('ten')
 
 	const job = new EventEmitter ()
 	
