@@ -165,6 +165,8 @@ test ('proxy', async () => {
 
 	expect (job.db.ten).toBe (10)
 
+	expect (job.db.job).toBe (job)
+
 	expect (await job.db.do ()).toBe ('done')
 
 	expect (job.db.ten).toBe (10)
