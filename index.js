@@ -13,4 +13,5 @@ module.exports = {
 	EventLogger: require ('./lib/EventLogger.js'),
 	JobEventLogger: require ('./lib/JobEventLogger.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
+	PasswordShaker: require ('./lib/PasswordShaker.js'),
 }
