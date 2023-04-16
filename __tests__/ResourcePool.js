@@ -4,8 +4,15 @@ const {ResourcePool, Application, MethodSelector, Job, JobSource} = require ('..
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
-class MockResource {	
+class MockParentResource {	
+	async get () {
+		return 'value'
+	}
+}
+
+class MockResource extends MockParentResource {	
 	constructor (raw) {
+		super ()
 		this.raw = raw
 	}
 	async release () {
@@ -163,12 +170,16 @@ test ('proxy', async () => {
 
 	expect (pool.cnt).toBe (0)
 
+	expect (await job.db.get ()).toBe ('value')
+
+	expect (pool.cnt).toBe (1)
+
 	expect (job.db.ten).toBe (10)
 
 	expect (job.db.job).toBe (job)
 
 	expect (await job.db.do ()).toBe ('done')
-
+	
 	expect (job.db.ten).toBe (10)
 
 	job.emit ('finish')
