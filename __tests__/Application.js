@@ -71,6 +71,25 @@ test ('logger', async () => {
 
 })
 
+test ('clone', async () => {
+
+	const logger = {}
+	
+	const app = new Application ({modules, logger, globals: {eventLogger: null}})
+	
+	const rq = {type: 'users', action: 'create', data: {label: 'admin'}}
+
+	const job = app.createJob ()
+	job.rq = rq
+			
+	const j1 = job.clone ()
+	expect (j1.rq).toStrictEqual (rq)
+
+	const j2 = job.clone ({id: 1, action: undefined, data: undefined})
+	expect (j2.rq).toStrictEqual ({type: 'users', id: 1, action: undefined, data: undefined})
+
+})
+
 test ('job 0', async () => {
 	
 	const app = new Application ({modules, globals: {eventLogger: null}})
