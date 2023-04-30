@@ -81,12 +81,18 @@ test ('clone', async () => {
 
 	const job = app.createJob ()
 	job.rq = rq
-			
-	const j1 = job.clone ()
-	expect (j1.rq).toStrictEqual (rq)
 
-	const j2 = job.clone ({id: 1, action: undefined, data: undefined})
-	expect (j2.rq).toStrictEqual ({type: 'users', id: 1, action: undefined, data: undefined})
+	{			
+		const j1 = job.clone ()
+		expect (j1.parent).toBe (job)
+		expect (j1.rq).toStrictEqual (rq)
+	}
+
+	{
+		const j2 = job.clone ({id: 1, action: undefined, data: undefined})
+		expect (j2.parent).toBe (job)
+		expect (j2.rq).toStrictEqual ({type: 'users', id: 1, action: undefined, data: undefined})
+	}
 
 })
 
