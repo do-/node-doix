@@ -197,8 +197,14 @@ test ('app pools', async () => {
 	const app = new Application ({modules, pools: {db: pool}})
 
 	const job = app.createJob ()
-			
-	expect (await job.db.do ()).toBe ('done')
+	
+	const {db} = job
+
+	expect (await db.do ()).toBe ('done')
+	expect (pool.cnt).toBe (1)
+
+	expect (await db.do ()).toBe ('done')
+	expect (pool.cnt).toBe (1)
 
 	job.emit ('finish')
 
