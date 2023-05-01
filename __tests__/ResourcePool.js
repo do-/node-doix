@@ -19,8 +19,8 @@ class MockResource extends MockParentResource {
 		if (this.raw.isBroken) throw Error ('OK')
 		this.raw.pool.cnt --
 	}
-	async do () {
-		return 'done'
+	async do (x) {
+		return x || 'done'
 	}
 }
 
@@ -200,7 +200,7 @@ test ('app pools', async () => {
 	
 	const {db} = job
 
-	expect (await db.do ()).toBe ('done')
+	expect (await db.do (1)).toBe (1)
 	expect (pool.cnt).toBe (1)
 
 	expect (await db.do ()).toBe ('done')
