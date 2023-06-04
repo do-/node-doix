@@ -171,8 +171,8 @@ test ('job fail undefined', async () => {
 	const app = new Application ({modules, globals: {eventLogger: null}})
 	const job = app.createJob ()
 
-	job.on ('error', j => delete j.error)
-	job.on ('start', j => j.fail (Error ('OK')))
+	job.on ('error', function () {delete this.error})
+	job.on ('start', function () {this.fail (Error ('OK'))})
 		
 	const r = await job.toComplete ()	
 	expect (r).toBeUndefined ()
