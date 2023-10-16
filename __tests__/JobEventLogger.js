@@ -29,7 +29,7 @@ test ('test no prefix', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('start', job)
+	job.emit ('start')
 	
 	expect (job.messages).toStrictEqual ([{level: 'info', message: '>'}])
 
@@ -43,7 +43,7 @@ test ('test nested', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('start', job)
+	job.emit ('start')
 	
 	expect (job.messages).toStrictEqual ([{level: 'info', message: '00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000 >'}])
 
@@ -55,7 +55,7 @@ test ('test start', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('start', job)
+	job.emit ('start')
 	
 	expect (job.messages).toStrictEqual ([{level: 'info', message: '00000000-0000-0000-0000-000000000000 >'}])
 
@@ -67,7 +67,7 @@ test ('test method', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('method', job, 'get_users')
+	job.emit ('method', 'get_users')
 	
 	expect (job.messages).toStrictEqual ([{level: 'info', message: '00000000-0000-0000-0000-000000000000 get_users {"type":"users"}'}])
 
@@ -81,7 +81,7 @@ test ('test error string', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('error', job, job.error)
+	job.emit ('error', job.error)
 	
 	expect (job.messages).toStrictEqual ([{level: 'error', message: '00000000-0000-0000-0000-000000000000 1'}])
 
@@ -95,7 +95,7 @@ test ('test error object', () => {
 	
 	const el = new JobEventLogger (job)
 	
-	job.emit ('error', job, job.error)
+	job.emit ('error', job.error)
 	
 	expect (job.messages).toHaveLength (1)
 	expect (job.messages [0].level).toBe ('error')
