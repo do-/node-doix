@@ -170,6 +170,8 @@ test ('proxy', async () => {
 
 	expect (pool.cnt).toBe (0)
 
+	expect (job.db.job).toBe (job)
+
 	expect (await job.db.get ()).toBe ('value')
 
 	expect (pool.cnt).toBe (1)
