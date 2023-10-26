@@ -109,8 +109,10 @@ test ('test finish', () => {
 	const el = new JobEventLogger (job)
 	
 	job.emit ('finish', job)
-	
+
 	expect (job.messages).toHaveLength (1)
 	expect (job.messages [0].level).toBe ('info')
 
+	expect (el.getPrefix ()).toBe ('00000000-0000-0000-0000-000000000000')
+	
 })
