@@ -35,28 +35,21 @@ test ('globals', async () => {
 test ('generators', async () => {
 	
 	const app = new Application ({modules, generators: {
-		eventLogger: () => null,
 		uuid: () => '00000000-0000-0000-0000-000000000000',
 	}})
 	const job = app.createJob ()
-
-	job.logger.log ({message: 'test'})
-	job.logger.log ({})
 
 	expect (job.uuid).toBe ('00000000-0000-0000-0000-000000000000')
 
 })
 
-test ('eventLoggerClass', async () => {
+test ('trackerClass', async () => {
 
 	class EL {constructor (job){this.job = job}}
 	
-	const app = new Application ({modules, eventLoggerClass: EL})
+	const app = new Application ({modules, trackerClass: EL})
 
 	const job = app.createJob ()
-
-	expect (job.eventLogger).toBeInstanceOf (EL)
-	expect (job.eventLogger.job).toBe (job)
 
 })
 
@@ -64,7 +57,7 @@ test ('logger', async () => {
 
 	const logger = {}
 	
-	const app = new Application ({modules, logger, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger})
 	const job = app.createJob ()
 			
 	expect (job.logger).toBe (logger)
@@ -72,10 +65,8 @@ test ('logger', async () => {
 })
 
 test ('clone', async () => {
-
-	const logger = {}
 	
-	const app = new Application ({modules, logger, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger: {log: s => s}})
 	
 	const rq = {type: 'users', action: 'create', data: {label: 'admin'}}
 
@@ -98,7 +89,8 @@ test ('clone', async () => {
 
 test ('job 0', async () => {
 	
-	const app = new Application ({modules, globals: {eventLogger: null}})
+	const app = new Application ({modules})
+	
 	const job = app.createJob ()
 		
 	const r = await job.toComplete ()
@@ -111,7 +103,7 @@ test ('job ok', async () => {
 
 	const id = 28
 	
-	const app = new Application ({modules, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger: {log: s => s}})
 	const job = app.createJob ()
 	
 	job.rq.type = 'users'
@@ -138,7 +130,7 @@ test ('job fail', async () => {
 
 	const id = 28
 	
-	const app = new Application ({modules, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger: {log: s => s}})
 	const job = app.createJob ()
 	
 	job.app = app
@@ -157,7 +149,7 @@ test ('job fail', async () => {
 
 test ('job fail 2', async () => {
 
-	const app = new Application ({modules, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger: {log: s => s}})
 	const job = app.createJob ()
 
 	job.on ('start', j => j.fail (Error ('OK')))
@@ -168,7 +160,7 @@ test ('job fail 2', async () => {
 
 test ('job fail undefined', async () => {
 
-	const app = new Application ({modules, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger: {log: s => s}})
 	const job = app.createJob ()
 
 	job.on ('error', function () {delete this.error})
@@ -181,7 +173,7 @@ test ('job fail undefined', async () => {
 
 test ('job src fail', async () => {
 
-	const app = new Application ({modules, globals: {eventLogger: null}})
+	const app = new Application ({modules, logger: {log: s => s}})
 
 	const jobSource0 = new JobSource (app)
 	

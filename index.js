@@ -11,7 +11,7 @@ module.exports = {
 	MethodSelector: require ('./lib/MethodSelector.js'),
 	Router: require ('./lib/Router.js'),
 	LifeCycleTracker: require ('./lib/LifeCycleTracker.js'),
-	JobEventLogger: require ('./lib/JobEventLogger.js'),
+	JobLifeCycleTracker: require ('./lib/JobLifeCycleTracker.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
 	PasswordShaker: require ('./lib/PasswordShaker.js'),
 }

@@ -1,5 +1,5 @@
 const EventEmitter = require ('events')
-const {JobEventLogger} = require ('..')
+const {JobLifeCycleTracker} = require ('..')
 
 class MockJob extends EventEmitter {
 
@@ -27,7 +27,7 @@ test ('test no prefix', () => {
 	
 	delete job.uuid
 	
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('start')
 	
@@ -41,7 +41,7 @@ test ('test nested', () => {
 	
 	job.parent = {uuid: '00000000-0000-0000-0000-000000000000'}
 	
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('start')
 	
@@ -53,7 +53,7 @@ test ('test start', () => {
 
 	const job = new MockJob ()
 	
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('start')
 	
@@ -65,7 +65,7 @@ test ('test method', () => {
 
 	const job = new MockJob ()
 	
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('method', 'get_users')
 	
@@ -79,7 +79,7 @@ test ('test error string', () => {
 	
 	job.error = '1'
 	
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('error', job.error)
 	
@@ -93,7 +93,7 @@ test ('test error object', () => {
 	
 	job.error = new Error ('OK')
 	
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('error', job.error)
 	
@@ -106,7 +106,7 @@ test ('test finish', () => {
 
 	const job = new MockJob ()
 		
-	const el = new JobEventLogger (job)
+	const el = new JobLifeCycleTracker (job)
 	
 	job.emit ('finish', job)
 

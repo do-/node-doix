@@ -87,20 +87,6 @@ test ('pool logger', async () => {
 
 })
 
-test ('event logger', async () => {
-
-	const pool = new MockPool ()
-	
-	pool.eventLoggerClass = class {constructor (r) {this.r = r}}
-
-	const job = new EventEmitter ()
-	
-	await pool.toSet (job, 'db')
-	
-	expect (job.db.eventLogger.r).toBe (job.db)
-
-})
-
 test ('set OK', async () => {
 
 	const pool = new MockPool ()
@@ -196,7 +182,7 @@ test ('app pools', async () => {
 	
 	const pool = new MockPool ()
 
-	const app = new Application ({modules, pools: {db: pool}})
+	const app = new Application ({modules, pools: {db: pool}, logger: {log: s => s}})
 
 	const job = app.createJob ()
 	
