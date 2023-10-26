@@ -26,12 +26,22 @@ test ('test no prefix', () => {
 	const job = new MockJob ()
 	
 	delete job.uuid
+
+	class T extends JobLifeCycleTracker {
+
+		startMessage () {
+
+			return super.startMessage () + '!'
 	
-	const el = new JobLifeCycleTracker (job)
+		}	
+
+	}
+	
+	const el = new T (job)
 	
 	job.emit ('start')
 	
-	expect (job.messages).toStrictEqual ([{level: 'info', message: '>'}])
+	expect (job.messages).toStrictEqual ([{level: 'info', message: '>!'}])
 
 })
 
