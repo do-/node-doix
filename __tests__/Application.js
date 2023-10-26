@@ -1,5 +1,5 @@
 const Path = require ('path')
-const {Application, MethodSelector, Job, JobSource} = require ('..')
+const {Application, MethodSelector, JobLifeCycleTracker, JobSource} = require ('..')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
@@ -59,8 +59,9 @@ test ('logger', async () => {
 	
 	const app = new Application ({modules, logger})
 	const job = app.createJob ()
-			
+
 	expect (job.logger).toBe (logger)
+	expect (job.tracker).toBeInstanceOf (JobLifeCycleTracker)
 
 })
 
