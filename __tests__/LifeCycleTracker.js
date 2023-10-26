@@ -1,5 +1,5 @@
 const EventEmitter = require ('events')
-const {EventLogger} = require ('..')
+const {LifeCycleTracker} = require ('..')
 
 test ('message', () => {
 
@@ -7,7 +7,7 @@ test ('message', () => {
 
 	const logger = {log: o => messages.push (o)}
 
-	class MyEventLogger  extends EventLogger {
+	class MyLifeCycleTracker extends LifeCycleTracker {
 
 		getPrefix (payload) {
 
@@ -31,19 +31,17 @@ test ('message', () => {
 
 	const ee = new EventEmitter ()
 
-	const el  = new MyEventLogger (ee)
-
-	el.logger = logger
+	const el  = new MyLifeCycleTracker (ee, logger)
 
 	ee.emit ('one')
 	ee.emit ('two')
-	ee.emit ('three', '+')
+	ee.emit ('three')
 
 	expect (messages).toStrictEqual (
 		[
 			{message: '1', level: 'debug'},
 			{message: '2', level: 'info'},
-			{message: '+ 3', level: 'info'}
+			{message: '3', level: 'info'}
 		]
 	)
 	
