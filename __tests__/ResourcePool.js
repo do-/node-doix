@@ -184,9 +184,13 @@ test ('app pools', async () => {
 
 	const app = new Application ({modules, pools: {db: pool}, logger: {log: s => s}})
 
-	const job = app.createJob ()
-	
+	const job = app.createJob ()	
+
 	const {db} = job
+
+	expect ([...job.resources (MockPool)]).toStrictEqual ([db])
+	expect ([...job.resources (ResourcePool)]).toStrictEqual ([db])
+	expect ([...job.resources (String)]).toStrictEqual ([])
 
 	expect (await db.do (1)).toBe (1)
 	expect (pool.cnt).toBe (1)
