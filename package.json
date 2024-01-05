@@ -1,24 +1,33 @@
 {
   "name": "doix",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A general purpose sever side framework",
   "main": "index.js",
-  "files": ["/lib", "/badges"],
+  "files": [
+    "/lib",
+    "/badges"
+  ],
   "scripts": {
     "test": "jest",
     "test-ci": "jest --ci --coverage"
   },
   "jest": {
-	"collectCoverageFrom": [
-		"lib/**/*.js"
-	],
-	"coverageReporters": ["clover", "json", "lcov", "text", "json-summary"],
-  	"verbose": false,
-  	"testPathIgnorePatterns": [
-  		"/node_modules/",
-  		"/__tests__/data",
-  		"/__tests__/lib"
-  	]
+    "collectCoverageFrom": [
+      "lib/**/*.js"
+    ],
+    "coverageReporters": [
+      "clover",
+      "json",
+      "lcov",
+      "text",
+      "json-summary"
+    ],
+    "verbose": false,
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/data",
+      "/__tests__/lib"
+    ]
   },
   "repository": {
     "type": "git",
@@ -32,5 +41,8 @@
   "devDependencies": {
     "jest": "^29.3.1"
   },
-  "homepage": "https://github.com/do-/node-doix#readme"
+  "homepage": "https://github.com/do-/node-doix#readme",
+  "dependencies": {
+    "string-normalize-space": "^1.0.0"
+  }
 }
