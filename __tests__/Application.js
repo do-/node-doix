@@ -49,7 +49,11 @@ test ('trackerClass', async () => {
 	
 	const app = new Application ({modules, trackerClass: EL})
 
-	const job = app.createJob ()
+	const job = app.createJob (), {tracker} = job
+
+	expect (job.tracker).toBe (tracker)
+
+	expect (tracker).toBeInstanceOf (EL)
 
 })
 
@@ -93,8 +97,8 @@ test ('job 0', async () => {
 	const app = new Application ({modules})
 	
 	const job = app.createJob ()
-		
-	const r = await job.toComplete ()
+
+	const r = await job.clone ().toComplete ()
 	
 	expect (r).toBeUndefined ()
 
