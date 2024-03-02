@@ -1,6 +1,6 @@
 const EventEmitter = require ('events')
 const Path = require ('path')
-const {ResourcePool, Application, MethodSelector, Job, JobSource} = require ('..')
+const {ResourcePool, Application} = require ('..')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 

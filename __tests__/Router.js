@@ -1,5 +1,7 @@
+const Path = require ('path')
 const EventEmitter = require ('events')
-const {Router} = require ('..')
+const {Application, RequestProcessor, Router} = require ('..')
+const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
 class Marker extends EventEmitter {
 
@@ -18,6 +20,34 @@ class Marker extends EventEmitter {
 	}
 
 }
+
+test ('RequestProcessor', async () => {
+
+	const app = new Application ({modules, logger: {log: s => s}})
+
+	const result = await new Promise ((ok, fail) => {
+
+		const p = new RequestProcessor (app, {
+			on: {
+				end: function () {
+					ok (this.result)
+				}
+			},
+			error: fail
+		})
+	
+		const r = new Router ()	
+		
+		r.add (p)
+			
+		r.process ({type: 'users', id: 1})	
+	
+	})
+
+	expect (result).toStrictEqual ({id: 1})
+
+})
+
 
 test ('Router 1', () => {
 
