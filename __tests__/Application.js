@@ -93,14 +93,27 @@ test ('clone', async () => {
 })
 
 test ('job 0', async () => {
+
+	const a = []
 	
-	const app = new Application ({modules})
+	const app = new Application ({modules, handlers: {
+
+		start: _ => a.push (1),
+
+		finish: [
+			_ => a.push (2),
+			_ => a.push (3),
+		]
+
+	}})
 	
 	const job = app.createJob ()
 
 	const r = await job.clone ().toComplete ()
 	
 	expect (r).toBeUndefined ()
+
+	expect (a).toStrictEqual ([1, 2, 3])
 
 })
 
