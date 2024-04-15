@@ -56,6 +56,8 @@ test ('Router 1', () => {
 	const p = new Marker (1, 'one')
 	
 	r.add (p)
+
+	expect (p.router).toBe (r)
 	
 	let m = {id: 1}
 	
