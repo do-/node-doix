@@ -1,9 +1,9 @@
 const Path = require ('path')
 const EventEmitter = require ('events')
-const {Application, RequestProcessor, Router} = require ('..')
+const {Application, RequestProcessor, Router, JobSource} = require ('..')
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
-class Marker extends EventEmitter {
+class Marker extends JobSource {
 
 	constructor (id, label) {
 		super ()
