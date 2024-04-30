@@ -1,6 +1,6 @@
 {
   "name": "doix",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A general purpose sever side framework",
   "main": "index.js",
   "files": [
