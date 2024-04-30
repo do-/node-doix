@@ -145,6 +145,10 @@ test ('proxy', async () => {
 
 	const pool = new MockPool ()
 
+	pool.on ('acquire', resource => resource.waitFor (
+		new Promise ((ok, fail) => ok (resource.f = true))
+	))
+
 	pool.ten = 10
 	pool.shared.add ('ten')
 
@@ -159,6 +163,8 @@ test ('proxy', async () => {
 	expect (job.db.job).toBe (job)
 
 	expect (await job.db.get ()).toBe ('value')
+
+	expect (await job.db.f).toBe (true)
 
 	expect (pool.cnt).toBe (1)
 
