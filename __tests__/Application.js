@@ -1,5 +1,6 @@
 const Path = require ('path')
 const {Application, MethodSelector, JobLifeCycleTracker, JobSource} = require ('..')
+const { isGeneratorFunction } = require('util/types')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
@@ -122,13 +123,28 @@ test ('job ok', async () => {
 	const id = 28
 	
 	const app = new Application ({modules, logger: {log: s => s}})
+
+	const t0 = Date.now ()
+
 	const job = app.createJob ()
 	
 	job.rq.type = 'users'
 	job.rq.id = id
 	
 	const a = async () => {}
+
+	expect (() => job.setMaxLatency ('10')).toThrow ()
+	expect (() => job.setMaxLatency (-1)).toThrow ()
+	expect (() => job.setMaxLatency (3.14)).toThrow ()
+
+	expect (() => job.setMinLatency ('10')).toThrow ()
+	expect (() => job.setMinLatency (-1)).toThrow ()
+	expect (() => job.setMinLatency (3.14)).toThrow ()
+	expect (() => job.setMinLatency (Infinity)).toThrow ()
 	
+	job.setMinLatency (100)
+	job.setMaxLatency (10000)
+
 	job.on ('start', () => {
 		job.waitFor (a ())
 	})
@@ -138,9 +154,18 @@ test ('job ok', async () => {
 		job.waitFor (a ())
 	})
 
-	const r = await job.toComplete ()
+	const toGetFinishd = new Promise ((ok) => {
+		job.on ('finished', () => ok (Date.now () - t0))
+	})
+
+	const [r, duration] = await Promise.all ([
+		job.toComplete (),
+		toGetFinishd,
+	])
 
 	expect (r).toStrictEqual ({id})
+
+	expect (duration).toBeGreaterThanOrEqual (100)
 
 })
 
@@ -157,6 +182,10 @@ test ('job fail', async () => {
 	
 	job.on ('error', e => {})
 	
+	job.setMaxLatency (Infinity)
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+
+	job.setMaxLatency (100)
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 	
 	job.rq.action = 'delete'
@@ -172,6 +201,36 @@ test ('job fail 2', async () => {
 
 	job.on ('start', j => j.fail (Error ('OK')))
 		
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	
+})
+
+test ('job fail on timeout 1', async () => {
+
+	const app = new Application ({modules, logger: {log: s => s}})
+	const job = app.createJob ({type: 'users', id: 1})
+
+	job.setMaxLatency (100)
+
+	job.on ('start', function () {
+		this.waitFor (
+			new Promise (ok => {
+				setTimeout (ok, 500);
+			})
+		)
+	})
+
+	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	
+})
+
+test ('job fail on timeout 2', async () => {
+
+	const app = new Application ({modules, logger: {log: s => s}})
+	const job = app.createJob ({type: 'users', action: 'wait_for', id: 500})
+
+	job.setMaxLatency (100)
+
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 	
 })
