@@ -56,6 +56,7 @@ test ('job logger', async () => {
 	await pool.toSet (job, 'db')
 	
 	expect (job.db.logger).toBe (logger)
+	expect (job.db.name).toBe ('db')
 
 })
 
