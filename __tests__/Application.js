@@ -268,13 +268,8 @@ test ('job src fail', async () => {
 		},
 	})
 
-	const job = app.createJob ()
-	
-	expect (job.o).toBeUndefined
-	expect (job.oo).toBeUndefined
-
-	jobSource.copyHandlersTo (job)
-	
+	const job = jobSource.createJob ()
+		
 	expect (job.o).toBe (o)
 	expect (job.oo).toBe (o)
 
