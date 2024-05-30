@@ -252,7 +252,13 @@ test ('job src fail', async () => {
 
 	const app = new Application ({modules, logger: {log: s => s}})
 
-	const jobSource0 = new JobSource (app)
+	{
+
+		const jobSource0 = new JobSource (app, {maxLatency: 10000})
+
+		const job0 = jobSource0.createJob ()
+
+	}
 	
 	const o = {}
 
