@@ -272,7 +272,10 @@ test ('job src fail', async () => {
 		
 	expect (job.o).toBe (o)
 	expect (job.oo).toBe (o)
+	expect (jobSource.pending.size).toBe (1)
 
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+
+	expect (jobSource.pending.size).toBe (0)
 
 })
