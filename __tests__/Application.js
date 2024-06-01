@@ -254,9 +254,11 @@ test ('job src fail', async () => {
 
 	{
 
-		const jobSource0 = new JobSource (app, {minLatency: 10, maxLatency: 10000})
+		const jobSource0 = new JobSource (app, {minLatency: 10, maxLatency: 10000, rq: {type: 'users'}})
 
-		const job0 = jobSource0.createJob ()
+		const job0 = jobSource0.createJob ({id: 1})
+
+		expect (job0.rq).toStrictEqual ({type: 'users', id: 1})
 
 	}
 	
