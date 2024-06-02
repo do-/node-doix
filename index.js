@@ -3,7 +3,6 @@ module.exports = {
 	ConsoleLogger: require ('./lib/ConsoleLogger.js'),
 	Job: require ('./lib/Job.js'),
 	JobSource: require ('./lib/JobSource.js'),
-	RequestProcessor: require ('./lib/RequestProcessor.js'),
 	ObjectMerger: require ('./lib/ObjectMerger.js'),
 	ModuleMap: require ('./lib/ModuleMap.js'),
 	ModuleLoader: require ('./lib/ModuleLoader.js'),

@@ -1,7 +1,6 @@
 const Path = require ('path')
 const EventEmitter = require ('events')
-const {Application, RequestProcessor, Router, JobSource} = require ('..')
-const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
+const {Router, JobSource} = require ('..')
 
 class Marker extends JobSource {
 
@@ -20,34 +19,6 @@ class Marker extends JobSource {
 	}
 
 }
-
-test ('RequestProcessor', async () => {
-
-	const app = new Application ({modules, logger: {log: s => s}})
-
-	const result = await new Promise ((ok, fail) => {
-
-		const p = new RequestProcessor (app, {
-			on: {
-				end: function () {
-					ok (this.result)
-				}
-			},
-			error: fail
-		})
-	
-		const r = new Router ()	
-		
-		r.add (p)
-			
-		r.process ({type: 'users', id: 1})	
-	
-	})
-
-	expect (result).toStrictEqual ({id: 1})
-
-})
-
 
 test ('Router 1', () => {
 
