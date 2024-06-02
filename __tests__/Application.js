@@ -254,11 +254,22 @@ test ('job src fail', async () => {
 
 	{
 
-		const jobSource0 = new JobSource (app, {minLatency: 10, maxLatency: 10000, rq: {type: 'users'}})
+		const jobSource0 = new JobSource (app, {
+			minLatency: 10, 
+			maxLatency: 10000, 
+			maxPending: 1, 
+			rq: {type: 'users'}
+		})
+
+		expect (jobSource0.capacity).toBe (1)
 
 		const job0 = jobSource0.createJob ({id: 1})
 
+		expect (jobSource0.capacity).toBe (0)
+
 		expect (job0.rq).toStrictEqual ({type: 'users', id: 1})
+
+		expect (() => {jobSource0.createJob ()}).toThrow (JobSource.OverflowError)
 
 	}
 	
@@ -276,7 +287,11 @@ test ('job src fail', async () => {
 		},
 	})
 
+	expect (jobSource.capacity).toBe (Infinity)
+
 	const job = jobSource.createJob ()
+
+	expect (jobSource.capacity).toBe (Infinity)
 		
 	expect (job.o).toBe (o)
 	expect (job.oo).toBe (o)
