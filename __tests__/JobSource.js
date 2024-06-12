@@ -44,7 +44,7 @@ test ('lag', async () => {
 
 	expect (() => jobSource.createJob ({type: 'users', id: 1})).toThrow (JobSource.LockedError)
 
-	jobSource.emit ('job-end')
+	jobSource.reset ()
 
 	expect (await jobSource.createJob ({type: 'users', id: 1}).toComplete ()).toStrictEqual ({id: 1})
 
