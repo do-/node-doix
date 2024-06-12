@@ -269,6 +269,14 @@ test ('job src fail', async () => {
 
 		expect (job0.rq).toStrictEqual ({type: 'users', id: 1})
 
+		let ended; jobSource0.on ('job-end', payload => ended = payload)
+
+		expect (ended).toBeUndefined ()
+
+		await job0.toComplete ();
+
+		expect (ended === job0).toBe (true)
+
 		expect (() => {jobSource0.createJob ()}).toThrow (JobSource.OverflowError)
 
 	}
@@ -287,6 +295,16 @@ test ('job src fail', async () => {
 		},
 	})
 
+	const last = {}
+
+	for (const event of [
+		'job-start',
+		'job-end',
+		'job-error',
+		'job-finish',
+		'job-finished',
+	]) jobSource.on (event, payload => last [event] = payload)
+
 	expect (jobSource.capacity).toBe (Infinity)
 
 	const job = jobSource.createJob ()
@@ -300,5 +318,16 @@ test ('job src fail', async () => {
 	await expect (() => job.toComplete ()).rejects.toBeDefined ()
 
 	expect (jobSource.pending.size).toBe (0)
+
+	expect (Object.keys (last)).toStrictEqual ([
+		'job-start',
+		'job-error',
+		'job-finish',
+		'job-finished',
+	])
+
+	for (const k in last) {
+		expect (last [k] === job).toBe (true)
+	}
 
 })
