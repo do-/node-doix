@@ -288,6 +288,10 @@ test ('job src fail', async () => {
 		generators: {oo: () => o},
 		on: {
 			start: j => j.fail (Error ('OK')),
+			method: [
+				j => j,
+				j => j,
+			],
 			error: [
 				j => j,
 				j => j,
