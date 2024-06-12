@@ -1,21 +1,21 @@
 const EventEmitter = require ('events')
 const {Lag} = require ('..')
 
-const jobSource = new EventEmitter ()
-
 test ('bad', () => {
 
 	expect (() => new Lag ()).toThrow ()
-	expect (() => new Lag (jobSource)).toThrow ()
-	expect (() => new Lag (jobSource, [])).toThrow ()
-	expect (() => new Lag (jobSource, ['0'])).toThrow ()
-	expect (() => new Lag (jobSource, [0, 0])).toThrow ()
+	expect (() => new Lag ([])).toThrow ()
+	expect (() => new Lag (['0'])).toThrow ()
+	expect (() => new Lag ([0, 0])).toThrow ()
 
 })
 
 test ('basic', () => {
 
-	const lag = new Lag (jobSource, [0, 10, Infinity])
+	const jobSource = new EventEmitter ()
+	const lag = new Lag ([0, 10, Infinity])
+	lag.jobSource = jobSource
+
 	expect (Number (lag)).toBe (0)
 
 	jobSource.emit ('job-end')

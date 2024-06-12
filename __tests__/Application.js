@@ -255,7 +255,7 @@ test ('job src fail', async () => {
 	{
 
 		const jobSource0 = new JobSource (app, {
-			minLatency: 10, 
+			lag: 10, 
 			maxLatency: 10000, 
 			maxPending: 1, 
 			rq: {type: 'users'}
