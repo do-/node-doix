@@ -1,7 +1,5 @@
-const EventEmitter = require ('events')
 const Path = require ('path')
-const {Lag, Application, MethodSelector, JobLifeCycleTracker, JobSource} = require ('..')
-const { type } = require('os')
+const {Lag, Application, JobSource} = require ('..')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 

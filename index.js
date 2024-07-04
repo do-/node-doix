@@ -4,6 +4,7 @@ module.exports = {
 	Job: require ('./lib/Job.js'),
 	Lag: require ('./lib/Lag.js'),
 	JobSource: require ('./lib/JobSource.js'),
+	Queue: require ('./lib/Queue.js'),
 	ObjectMerger: require ('./lib/ObjectMerger.js'),
 	ModuleMap: require ('./lib/ModuleMap.js'),
 	ModuleLoader: require ('./lib/ModuleLoader.js'),
