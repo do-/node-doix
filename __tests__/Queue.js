@@ -1,7 +1,6 @@
 const EventEmitter = require ('events')
 const Path = require ('path')
-const {Application, Queue} = require ('..')
-const { error } = require('console')
+const {Job, Application, Queue} = require ('..')
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 const app = new Application ({
 	modules, 
@@ -30,7 +29,10 @@ test ('onJobFinished', async () => {
 
 	class TestQueue extends Queue {
 		check () {a.push (CHECK)}
-		async peek () {return {id: 1}}
+		async peek (job) {
+			if (!(job instanceof Job)) throw Error ('Not a Job')
+			return {id: 1}
+		}
 	}
 
 	const q = new TestQueue (app, {rq: {type: 'users'}})
