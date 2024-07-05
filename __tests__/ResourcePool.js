@@ -200,6 +200,7 @@ test ('app pools', async () => {
 	expect ([...job.resources (String)]).toStrictEqual ([])
 
 	expect (pool.app).toBe (app)
+	expect (pool.name).toBe ('db')
 
 	expect (await db.do (1)).toBe (1)
 	expect (pool.cnt).toBe (1)
