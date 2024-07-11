@@ -1,4 +1,3 @@
-const Path = require ('path')
 const EventEmitter = require ('events')
 const {Router, JobSource} = require ('..')
 
