@@ -1,10 +1,15 @@
 const EventEmitter = require ('events')
-const {Router, JobSource} = require ('..')
+const {Router, JobSource, Application} = require ('..')
+
+const Path = require ('path')
+const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
+
+const app = new Application ({modules})
 
 class Marker extends JobSource {
 
 	constructor (id, label) {
-		super ()
+		super (app)
 		this.id = id
 		this.label = label
 	}

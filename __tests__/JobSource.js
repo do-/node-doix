@@ -7,6 +7,10 @@ test ('bad', () => {
 
 	const app = new Application ({modules})
 
+	expect (() => new JobSource ()).toThrow ()
+	expect (() => new JobSource (undefined, {})).toThrow ()
+	expect (() => new JobSource ({}, {})).toThrow ()
+
 	expect (() => new JobSource (app, {lag:      '1'})).toThrow ()
 	expect (() => new JobSource (app, {lag:       -1})).toThrow ()
 	expect (() => new JobSource (app, {lag:      1.5})).toThrow ()
