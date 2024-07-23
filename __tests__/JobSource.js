@@ -30,6 +30,8 @@ test ('lag', async () => {
 
 	const job = jobSource.createJob ({type: 'userz', id: 1})
 
+	expect (job.src).toBe (jobSource)
+
 	const _ts = Date.now ()
 
 	await new Promise (ok => {
