@@ -15,5 +15,4 @@ module.exports = {
 	LifeCycleTracker: require ('./lib/LifeCycleTracker.js'),
 	JobLifeCycleTracker: require ('./lib/JobLifeCycleTracker.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
-	PasswordShaker: require ('./lib/PasswordShaker.js'),
 }
