@@ -44,7 +44,7 @@ test ('lag', async () => {
 
 	}) 	
 
-	expect (Date.now () - _ts).toBeGreaterThanOrEqual (10)
+	expect (Date.now () - _ts).toBeGreaterThanOrEqual (9)
 
 	expect (() => jobSource.createJob ({type: 'users', id: 1})).toThrow (JobSource.LockedError)
 

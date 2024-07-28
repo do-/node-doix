@@ -107,7 +107,7 @@ test ('watch', () => {
 		const a = [...m.require ('tb_houses')]
 		expect (a).toHaveLength (8)
 	}
-	
+
 	for (const id of [1, 2]) {
 
 		x_on (id)
