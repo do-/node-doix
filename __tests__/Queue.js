@@ -1,4 +1,5 @@
 const EventEmitter = require ('events')
+const process = require('node:process')
 const Path = require ('path')
 const {Job, Application, Queue} = require ('..')
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
@@ -107,6 +108,43 @@ test ('check ()', async () => {
 		}
 
 	})
+
+	expect (a).toHaveLength (0)
+	expect (r).toStrictEqual ([u])
+
+})
+
+test ('cron', async () => {
+
+	process.on('exit', (code) => {
+		console.log('Process beforeExit event with code: ', code);
+	  });
+
+	const u = {id: 1}, a = [u], r = []
+
+	class TestQueue extends Queue {
+		async peek () {return a [0] || null}
+	}
+
+	await new Promise ((ok, fail) => {
+
+		const q = new TestQueue (app, {
+			rq: {type: 'users'},
+			cron: '* * * * * *',
+			on: {
+				end:    function () {r.push (this.result)},
+				error:  function () {fail (this.error)},
+				finish: function () {a.shift ()},
+			}
+		})
+
+		q.on ('job-finished', () => {
+			if (q.pending.size === 0) ok ()
+		})
+
+	})
+
+	app.emit ('finish')
 
 	expect (a).toHaveLength (0)
 	expect (r).toStrictEqual ([u])
