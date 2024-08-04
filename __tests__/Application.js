@@ -1,21 +1,32 @@
 const Path = require ('path')
-const {Application, MethodSelector, JobLifeCycleTracker, JobSource, ResourcePool} = require ('..')
+const {Application, MethodSelector, JobLifeCycleTracker, JobSource} = require ('..')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
 class MS extends MethodSelector {getModuleName (o){return null}}
 
+const {Writable} = require ('stream')
+const winston = require ('winston')
+const logger = winston.createLogger({
+	transports: [
+//	  new winston.transports.Console ()
+	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
+	]
+})
+
 test ('constructor', () => {
 
 	expect (() => {new Application ()}).toThrow (TypeError)
 	expect (() => {new Application ({})}).toThrow ()
-	expect (() => {new Application ({modules, foo: 1})}).toThrow ()	
-	expect (() => {new Application ({modules, pools: {db: {connectionString: '...'}}})}).toThrow ('ResourcePool')	
-	expect (() => {new Application ({modules, methodSelector: 0})}).toThrow ()	
-	expect (new Application ({modules, methodSelector: undefined})).toBeInstanceOf (Application)
-	expect (new Application ({modules, methodSelector: new MS ()})).toBeInstanceOf (Application)
+	expect (() => {new Application ({modules, logger: {}})}).toThrow ()
+	expect (() => {new Application ({logger})}).toThrow ()
+	expect (() => {new Application ({modules, logger, foo: 1})}).toThrow ()	
+	expect (() => {new Application ({modules, logger, pools: {db: {connectionString: '...'}}})}).toThrow ('ResourcePool')	
+	expect (() => {new Application ({modules, logger, methodSelector: 0})}).toThrow ()	
+	expect (new Application ({modules, logger, methodSelector: undefined})).toBeInstanceOf (Application)
+	expect (new Application ({modules, logger, methodSelector: new MS ()})).toBeInstanceOf (Application)
 
-	const app = new Application ({modules, pools: {}})
+	const app = new Application ({modules, logger, pools: {}})
 	
 	expect (app).toBeInstanceOf (Application)
 	expect (app.methodSelector).toBeInstanceOf (MethodSelector)
@@ -23,24 +34,24 @@ test ('constructor', () => {
 })
 
 test ('globals', async () => {
-
-	const o = {}
 	
-	const app = new Application ({modules, globals: {eventLogger: null, logger: o}})
+	const app = new Application ({modules, logger, globals: {eventLogger: null}})
 	const job = app.createJob ()
 			
-	expect (job.logger).toBe (o)
+	expect (job.logger).toBe (logger)
 
 })
 
 test ('generators', async () => {
 	
-	const app = new Application ({modules, generators: {
+	const app = new Application ({modules, logger, generators: {
 		uuid: () => '00000000-0000-0000-0000-000000000000',
+		logger: () => logger,
 	}})
 	const job = app.createJob ()
 
 	expect (job.uuid).toBe ('00000000-0000-0000-0000-000000000000')
+	expect (job.logger).toBe (logger)
 
 })
 
@@ -48,7 +59,7 @@ test ('trackerClass', async () => {
 
 	class EL {constructor (job){this.job = job}}
 	
-	const app = new Application ({modules, trackerClass: EL})
+	const app = new Application ({modules, logger, trackerClass: EL})
 
 	const job = app.createJob (), {tracker} = job
 
@@ -59,20 +70,17 @@ test ('trackerClass', async () => {
 })
 
 test ('logger', async () => {
-
-	const logger = {}
 	
 	const app = new Application ({modules, logger})
 	const job = app.createJob ()
 
-	expect (job.logger).toBe (logger)
 	expect (job.tracker).toBeInstanceOf (JobLifeCycleTracker)
 
 })
 
 test ('clone', async () => {
 	
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 	
 	const rq = {type: 'users', action: 'create', data: {label: 'admin'}}
 
@@ -97,7 +105,7 @@ test ('job 0', async () => {
 
 	const a = []
 	
-	const app = new Application ({modules, handlers: {
+	const app = new Application ({modules, logger, handlers: {
 
 		start: _ => a.push (1),
 
@@ -122,7 +130,7 @@ test ('job ok', async () => {
 
 	const id = 28
 	
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 
 	const t0 = Date.now ()
 
@@ -173,7 +181,7 @@ test ('job fail', async () => {
 
 	const id = 28
 	
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 	const job = app.createJob ()
 	
 	job.app = app
@@ -196,7 +204,7 @@ test ('job fail', async () => {
 
 test ('job fail 2', async () => {
 
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 	const job = app.createJob ()
 
 	job.on ('start', j => j.fail (Error ('OK')))
@@ -207,7 +215,7 @@ test ('job fail 2', async () => {
 
 test ('job fail on timeout 1', async () => {
 
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 	const job = app.createJob ({type: 'users', id: 1})
 
 	job.setMaxLatency (100)
@@ -226,7 +234,7 @@ test ('job fail on timeout 1', async () => {
 
 test ('job fail on timeout 2', async () => {
 
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 	const job = app.createJob ({type: 'users', action: 'wait_for', id: 500})
 
 	job.setMaxLatency (100)
@@ -237,7 +245,7 @@ test ('job fail on timeout 2', async () => {
 
 test ('job fail undefined', async () => {
 
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 	const job = app.createJob ()
 
 	job.on ('error', function () {delete this.error})
@@ -250,7 +258,7 @@ test ('job fail undefined', async () => {
 
 test ('job src fail', async () => {
 
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 
 	{
 

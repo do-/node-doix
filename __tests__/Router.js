@@ -1,10 +1,19 @@
+const {Writable} = require ('stream')
+const winston = require ('winston')
+const logger = winston.createLogger({
+	transports: [
+//	  new winston.transports.Console ()
+	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
+	]
+})
+
 const EventEmitter = require ('events')
 const {Router, JobSource, Application} = require ('..')
 
 const Path = require ('path')
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
-const app = new Application ({modules})
+const app = new Application ({modules, logger})
 
 class Marker extends JobSource {
 

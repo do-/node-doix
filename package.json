@@ -1,6 +1,6 @@
 {
   "name": "doix",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "A general purpose sever side framework",
   "main": "index.js",
   "files": [
@@ -45,6 +45,7 @@
   "dependencies": {
     "croner": "^8.1.0",
     "require-sliced": "^1.0.1",
-    "string-normalize-space": "^1.0.0"
+    "string-normalize-space": "^1.0.0",
+    "winston": "^3.13.1"
   }
 }

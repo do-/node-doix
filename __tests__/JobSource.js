@@ -3,9 +3,18 @@ const {Lag, Application, JobSource} = require ('..')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
+const {Writable} = require ('stream')
+const winston = require ('winston')
+const logger = winston.createLogger({
+	transports: [
+//	  new winston.transports.Console ()
+	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
+	]
+})
+
 test ('bad', () => {
 
-	const app = new Application ({modules})
+	const app = new Application ({modules, logger})
 
 	expect (() => new JobSource ()).toThrow ()
 	expect (() => new JobSource (undefined, {})).toThrow ()
@@ -24,7 +33,7 @@ test ('bad', () => {
 
 test ('lag', async () => {
 
-	const app = new Application ({modules, logger: {log: s => s}})
+	const app = new Application ({modules, logger})
 
 	const jobSource = new JobSource (app, {lag: [10, Infinity]})
 

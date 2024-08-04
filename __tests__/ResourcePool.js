@@ -2,6 +2,15 @@ const EventEmitter = require ('events')
 const Path = require ('path')
 const {ResourcePool, Application} = require ('..')
 
+const {Writable} = require ('stream')
+const winston = require ('winston')
+const logger = winston.createLogger({
+	transports: [
+//	  new winston.transports.Console ()
+	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
+	]
+})
+
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
 class MockParentResource {	
@@ -184,12 +193,10 @@ test ('proxy', async () => {
 })
 
 test ('app pools', async () => {
-
-	const o = {}
 	
 	const pool = new MockPool ()
 
-	const app = new Application ({modules, pools: {db: pool}, logger: {log: s => s}})
+	const app = new Application ({modules, logger, pools: {db: pool}})
 
 	const job = app.createJob ()	
 
