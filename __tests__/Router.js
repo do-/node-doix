@@ -18,7 +18,7 @@ const app = new Application ({modules, logger})
 class Marker extends JobSource {
 
 	constructor (id, label) {
-		super (app)
+		super (app, {name: label})
 		this.id = id
 		this.label = label
 	}
@@ -37,7 +37,7 @@ test ('Router 1', () => {
 
 	const r = new Router ()
 	
-	const p = new Marker (1, 'one')
+	const p = new Marker (1, 'unity')
 	
 	r.add (p)
 
@@ -47,7 +47,7 @@ test ('Router 1', () => {
 	
 	r.process (m)	
 	
-	expect (m).toStrictEqual ({id: 1, label: 'one'})
+	expect (m).toStrictEqual ({id: 1, label: 'unity'})
 
 })
 

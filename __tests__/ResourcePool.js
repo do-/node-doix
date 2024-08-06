@@ -1,6 +1,6 @@
 const EventEmitter = require ('events')
 const Path = require ('path')
-const {ResourcePool, Application} = require ('..')
+const {ResourcePool, Application, JobSource} = require ('..')
 
 const {Writable} = require ('stream')
 const winston = require ('winston')
@@ -198,7 +198,9 @@ test ('app pools', async () => {
 
 	const app = new Application ({modules, logger, pools: {db: pool}})
 
-	const job = app.createJob ()	
+	const svc = new JobSource (app, {name: 'svc'})
+
+	const job = svc.createJob ()
 
 	const {db} = job
 

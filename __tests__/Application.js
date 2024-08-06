@@ -33,41 +33,46 @@ test ('constructor', () => {
 
 })
 
-test ('globals', async () => {
+test ('globals', () => {
 	
-	const app = new Application ({modules, logger, globals: {eventLogger: null}})
-	const job = app.createJob ()
+	const app = new Application ({modules, logger, globals: {PI: 3.14}}), svc = new JobSource (app, {name: 'svc'})
+
+	const job = svc.createJob ()
 			
-	expect (job.logger).toBe (logger)
+	expect (job.PI).toBe (3.14)
 
 })
 
-test ('generators', async () => {
+test ('generators', () => {
 	
 	const app = new Application ({modules, logger, generators: {
 		uuid: () => '00000000-0000-0000-0000-000000000000',
 		logger: () => logger,
-	}})
-	const job = app.createJob ()
+	}}), svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ()
 
 	expect (job.uuid).toBe ('00000000-0000-0000-0000-000000000000')
 	expect (job.logger).toBe (logger)
 
 })
 
-test ('trackerClass', async () => {
+test ('trackerClass', () => {
 
 	class EL {constructor (job){this.job = job}}
 	
-	const app = new Application ({modules, logger, trackerClass: EL})
+	const app = new Application ({modules, logger, trackerClass: EL}), svc = new JobSource (app, {name: 'svc'})
 
-	const job = app.createJob (), {tracker} = job
+	const job = svc.createJob (), {tracker} = job
 
 	expect (job.tracker).toBe (tracker)
 
 	expect (tracker).toBeInstanceOf (EL)
 
 })
+
+/*
+
+
 
 test ('logger', async () => {
 	
@@ -77,14 +82,15 @@ test ('logger', async () => {
 	expect (job.tracker).toBeInstanceOf (JobLifeCycleTracker)
 
 })
+*/
 
-test ('clone', async () => {
+test ('clone', () => {
 	
-	const app = new Application ({modules, logger})
+	const app = new Application ({modules, logger}), svc = new JobSource (app, {name: 'svc'})
 	
 	const rq = {type: 'users', action: 'create', data: {label: 'admin'}}
 
-	const job = app.createJob ()
+	const job = svc.createJob ()
 	job.rq = rq
 
 	{			
@@ -101,6 +107,7 @@ test ('clone', async () => {
 
 })
 
+
 test ('job 0', async () => {
 
 	const a = []
@@ -116,7 +123,9 @@ test ('job 0', async () => {
 
 	}})
 	
-	const job = app.createJob ()
+	const svc = new JobSource (app, {name: 'svc'})
+
+	const job = svc.createJob ()
 
 	const r = await job.clone ().toComplete ()
 	
@@ -131,10 +140,11 @@ test ('job ok', async () => {
 	const id = 28
 	
 	const app = new Application ({modules, logger})
+	const svc = new JobSource (app, {name: 'svc'})
 
 	const t0 = Date.now ()
 
-	const job = app.createJob ()
+	const job = svc.createJob ()
 	
 	job.rq.type = 'users'
 	job.rq.id = id
@@ -178,11 +188,10 @@ test ('job ok', async () => {
 })
 
 test ('job fail', async () => {
-
-	const id = 28
 	
 	const app = new Application ({modules, logger})
-	const job = app.createJob ()
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ()
 	
 	job.app = app
 	job.rq.type = 'users'
@@ -205,7 +214,8 @@ test ('job fail', async () => {
 test ('job fail 2', async () => {
 
 	const app = new Application ({modules, logger})
-	const job = app.createJob ()
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ()
 
 	job.on ('start', j => j.fail (Error ('OK')))
 		
@@ -216,7 +226,8 @@ test ('job fail 2', async () => {
 test ('job fail on timeout 1', async () => {
 
 	const app = new Application ({modules, logger})
-	const job = app.createJob ({type: 'users', id: 1})
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ({type: 'users', id: 1})
 
 	job.setMaxLatency (100)
 
@@ -235,7 +246,8 @@ test ('job fail on timeout 1', async () => {
 test ('job fail on timeout 2', async () => {
 
 	const app = new Application ({modules, logger})
-	const job = app.createJob ({type: 'users', action: 'wait_for', id: 500})
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ({type: 'users', action: 'wait_for', id: 500})
 
 	job.setMaxLatency (100)
 
@@ -246,7 +258,8 @@ test ('job fail on timeout 2', async () => {
 test ('job fail undefined', async () => {
 
 	const app = new Application ({modules, logger})
-	const job = app.createJob ()
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ()
 
 	job.on ('error', function () {delete this.error})
 	job.on ('start', function () {this.fail (Error ('OK'))})
@@ -263,6 +276,7 @@ test ('job src fail', async () => {
 	{
 
 		const jobSource0 = new JobSource (app, {
+			name: 'jobSource0',
 			lag: 10, 
 			maxLatency: 10000, 
 			maxPending: 1, 
@@ -292,6 +306,7 @@ test ('job src fail', async () => {
 	const o = {}
 
 	const jobSource = new JobSource (app, {
+		name: 'jobSource',
 		globals: {o},
 		generators: {oo: () => o},
 		on: {

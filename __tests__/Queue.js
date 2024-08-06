@@ -21,14 +21,14 @@ const app = new Application ({
 test ('maxPending', async () => {
 
 	{
-		const q = new Queue (app)
+		const q = new Queue (app, {name: 'q1'})
 		expect (q.maxPending).toBe (1)	
 		expect (await q.peek ()).toBeNull ()	
 	}
 
 	{
 		const maxPending = 10
-		const q = new Queue (app, {maxPending})
+		const q = new Queue (app, {name: 'q2', maxPending})
 		expect (q.maxPending).toBe (maxPending)	
 	}
 
@@ -46,7 +46,7 @@ test ('onJobFinished', async () => {
 		}
 	}
 
-	const q = new TestQueue (app, {rq: {type: 'users'}})
+	const q = new TestQueue (app, {name: 'q3', rq: {type: 'users'}})
 
 	const j = q.createJob ()
 	await j.toBroadcast ('start')
@@ -60,7 +60,7 @@ test ('onJobFinished', async () => {
 
 test ('nullRq', async () => {
 
-	const q = new Queue (app), j = new EventEmitter ()
+	const q = new Queue (app, {name: 'q4'}), j = new EventEmitter ()
 
 	await q.onJobStart (j)
 
@@ -74,7 +74,7 @@ test ('bad peek', async () => {
 		async peek () {return 1}
 	}
 
-	const q = new TestQueue (app)
+	const q = new TestQueue (app, {name: 'q5'})
 
 	await expect (() => q.onJobStart ({})).rejects.toBeDefined ()
 
@@ -91,6 +91,7 @@ test ('check ()', async () => {
 	await new Promise ((ok, fail) => {
 
 		const q = new TestQueue (app, {
+			name: 'q6',
 			rq: {type: 'users'},
 			on: {
 				end:    function () {r.push (this.result)},
@@ -139,6 +140,7 @@ test ('cron', async () => {
 	await new Promise ((ok, fail) => {
 
 		const q = new TestQueue (app, {
+			name: 'q7',
 			rq: {type: 'users'},
 			cron: '* * * * * *',
 			on: {

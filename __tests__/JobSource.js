@@ -20,14 +20,22 @@ test ('bad', () => {
 	expect (() => new JobSource (undefined, {})).toThrow ()
 	expect (() => new JobSource ({}, {})).toThrow ()
 
-	expect (() => new JobSource (app, {lag:      '1'})).toThrow ()
-	expect (() => new JobSource (app, {lag:       -1})).toThrow ()
-	expect (() => new JobSource (app, {lag:      1.5})).toThrow ()
-	expect (() => new JobSource (app, {lag: Infinity})).toThrow ()
-	expect (() => new JobSource (app, {lag:       {}})).toThrow ()
+	expect (() => new JobSource (app, {name: ''})).toThrow ('name')
+	expect (() => new JobSource (app, {name: 0})).toThrow ('name')
 
-	new JobSource (app, {lag: 1})
-	new JobSource (app, {lag: new Lag ([0, 10, Infinity])})
+	expect (() => new JobSource (app, {name: 's1', lag:      '1'})).toThrow ('lag')
+	expect (() => new JobSource (app, {name: 's1', lag:       -1})).toThrow ('lag')
+	expect (() => new JobSource (app, {name: 's1', lag:      1.5})).toThrow ('lag')
+	expect (() => new JobSource (app, {name: 's1', lag: Infinity})).toThrow ('lag')
+	expect (() => new JobSource (app, {name: 's1', lag:       {}})).toThrow ('lag')
+
+	expect (() => new JobSource (app, {name: 's1', logger:    {}})).toThrow ('log')
+
+	new JobSource (app, {lag: 1, name: 's1', logger})
+	expect (() => new JobSource (app, {name: 's1'})).toThrow ('already')
+
+	new JobSource (app, {lag: new Lag ([0, 10, Infinity]), name: 's2'})
+
 
 })
 
@@ -35,7 +43,7 @@ test ('lag', async () => {
 
 	const app = new Application ({modules, logger})
 
-	const jobSource = new JobSource (app, {lag: [10, Infinity]})
+	const jobSource = new JobSource (app, {lag: [10, Infinity], name: 's3'})
 
 	const job = jobSource.createJob ({type: 'userz', id: 1})
 
