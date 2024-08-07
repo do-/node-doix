@@ -11,7 +11,7 @@ class MockJob extends EventEmitter {
 		
 		this.logger = {}
 		
-		this.uuid = '00000000-0000-0000-0000-000000000000'
+		this.id = '00000000-0000-0000-0000-000000000000'
 		
 		this.rq = {type: 'users'}
 		
@@ -25,7 +25,7 @@ test ('test no prefix', () => {
 
 	const job = new MockJob ()
 	
-	delete job.uuid
+	delete job.id
 
 	class T extends JobLifeCycleTracker {
 
@@ -49,7 +49,7 @@ test ('test nested', () => {
 
 	const job = new MockJob ()
 	
-	job.parent = {uuid: '00000000-0000-0000-0000-000000000000'}
+	job.parent = {id: '00000000-0000-0000-0000-000000000000'}
 	
 	const el = new JobLifeCycleTracker (job)
 	

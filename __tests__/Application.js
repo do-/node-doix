@@ -9,7 +9,7 @@ const {Writable} = require ('stream')
 const winston = require ('winston')
 const logger = winston.createLogger({
 	transports: [
-//	  new winston.transports.Console ()
+//	  new winston.transports.Console (),
 	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
 	]
 })
@@ -46,12 +46,12 @@ test ('globals', () => {
 test ('generators', () => {
 	
 	const app = new Application ({modules, logger, generators: {
-		uuid: () => '00000000-0000-0000-0000-000000000000',
+		id: () => '00000000-0000-0000-0000-000000000000',
 		logger: () => logger,
 	}}), svc = new JobSource (app, {name: 'svc'})
 	const job = svc.createJob ()
 
-	expect (job.uuid).toBe ('00000000-0000-0000-0000-000000000000')
+	expect (job.id).toBe ('00000000-0000-0000-0000-000000000000')
 	expect (job.logger).toBe (logger)
 
 })
