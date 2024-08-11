@@ -1,5 +1,6 @@
 const Path = require ('path')
-const {Application, MethodSelector, JobLifeCycleTracker, JobSource} = require ('..')
+const {Application, MethodSelector, JobSource} = require ('..')
+const {Tracker} = require ('events-to-winston')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
@@ -56,34 +57,6 @@ test ('generators', () => {
 
 })
 
-test ('trackerClass', () => {
-
-	class EL {constructor (job){this.job = job}}
-	
-	const app = new Application ({modules, logger, trackerClass: EL}), svc = new JobSource (app, {name: 'svc'})
-
-	const job = svc.createJob (), {tracker} = job
-
-	expect (job.tracker).toBe (tracker)
-
-	expect (tracker).toBeInstanceOf (EL)
-
-})
-
-/*
-
-
-
-test ('logger', async () => {
-	
-	const app = new Application ({modules, logger})
-	const job = app.createJob ()
-
-	expect (job.tracker).toBeInstanceOf (JobLifeCycleTracker)
-
-})
-*/
-
 test ('clone', () => {
 	
 	const app = new Application ({modules, logger}), svc = new JobSource (app, {name: 'svc'})
@@ -137,10 +110,31 @@ test ('job 0', async () => {
 
 test ('job ok', async () => {
 
+	let s = ''
+
+	const stream = new Writable ({
+		write (r, _, cb) {
+			s += r.toString ()
+			cb ()
+		}
+		
+	})
+
+	const logger = winston.createLogger({
+		transports: [
+//		  new winston.transports.Console (),
+		  new winston.transports.Stream ({stream})
+		],
+		format: winston.format.combine (
+			winston.format.timestamp ({format: 'YYYY-MM-DD[T]hh:mm:ss.SSS'}),
+			winston.format.printf ((i => `${i.timestamp} ${i.level} ${i.id} ${i.event === 'finish' ? i.elapsed + ' ms' : i.message}${i.details ? ' ' + JSON.stringify (i.details) : ''}`))
+		),
+	})
+
 	const id = 28
 	
 	const app = new Application ({modules, logger})
-	const svc = new JobSource (app, {name: 'svc'})
+	const svc = new JobSource (app, {name: 'svc', generators: {id: () => '007'}})
 
 	const t0 = Date.now ()
 
@@ -184,6 +178,12 @@ test ('job ok', async () => {
 	expect (r).toStrictEqual ({id})
 
 	expect (duration).toBeGreaterThanOrEqual (100)
+
+	const lines = s.trim ().split ('\n').map (s => s.trim ())
+
+	expect (lines).toHaveLength (2)
+	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 get_item_of_users {"type":"users","id":28}$/)
+	expect (lines [1]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 \d+ ms/)
 
 })
 

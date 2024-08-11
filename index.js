@@ -6,7 +6,5 @@ module.exports = {
 	Queue: require ('./lib/Queue.js'),
 	MethodSelector: require ('./lib/MethodSelector.js'),
 	Router: require ('./lib/Router.js'),
-	LifeCycleTracker: require ('./lib/LifeCycleTracker.js'),
-	JobLifeCycleTracker: require ('./lib/JobLifeCycleTracker.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
 }
