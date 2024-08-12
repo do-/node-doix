@@ -209,11 +209,11 @@ test ('job ok', async () => {
 	const lines = s.trim ().split ('\n').map (s => s.trim ())
 
 // console.log (lines)
-/*
+
 	expect (lines).toHaveLength (2)
-	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 get_item_of_users {"type":"users","id":28}$/)
+	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 get_item_of_users {"rq":{"type":"users","id":28}}$/)
 	expect (lines [1]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 \d+ ms/)
-*/
+
 })
 
 test ('job fail 2', async () => {
