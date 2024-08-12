@@ -1,6 +1,6 @@
 {
   "name": "doix",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "A general purpose sever side framework",
   "main": "index.js",
   "files": [
@@ -42,11 +42,12 @@
     "jest": "^29.3.1"
   },
   "homepage": "https://github.com/do-/node-doix#readme",
+  "peerDependencies": {
+    "winston": "^3.13.1"
+  },
   "dependencies": {
     "croner": "^8.1.0",
     "events-to-winston": "^1.0.2",
-    "require-sliced": "^1.0.1",
-    "string-normalize-space": "^1.0.0",
-    "winston": "^3.13.1"
+    "require-sliced": "^1.0.1"
   }
 }
