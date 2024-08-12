@@ -2,7 +2,7 @@ const {Writable} = require ('stream')
 const winston = require ('winston')
 const logger = winston.createLogger({
 	transports: [
-//	  new winston.transports.Console ()
+//	  new winston.transports.Console (),
 	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
 	]
 })
@@ -35,7 +35,19 @@ class Marker extends JobSource {
 
 test ('Router 1', () => {
 
-	const r = new Router ()
+	expect (() => new Router ()).toThrow ()
+	expect (() => new Router (0)).toThrow ()
+	expect (() => new Router ({})).toThrow ()
+	expect (() => new Router ({name: 0})).toThrow ()
+	expect (() => new Router ({name: ''})).toThrow ()
+	expect (() => new Router ({name: '0'})).toThrow ()
+	expect (() => new Router ({name: '0', logger: 0})).toThrow ()
+
+})
+
+test ('Router 1', () => {
+
+	const r = new Router ({name: 'Roo', logger})
 	
 	const p = new Marker (1, 'unity')
 	
@@ -44,8 +56,12 @@ test ('Router 1', () => {
 	expect (p.router).toBe (r)
 	
 	let m = {id: 1}
+
+	r.emit ('start')
 	
 	r.process (m)	
+
+	r.emit ('finish')
 	
 	expect (m).toStrictEqual ({id: 1, label: 'unity'})
 
@@ -53,7 +69,7 @@ test ('Router 1', () => {
 
 test ('Router 12', () => {
 
-	const r = new Router ()
+	const r = new Router ({name: 'Roo', logger})
 	
 	r
 		.add (new Marker (1, 'one'))
@@ -73,7 +89,7 @@ test ('Router 12', () => {
 
 test ('Router A', () => {
 
-	const r = new Router ()
+	const r = new Router ({name: 'Roo', logger})
 	
 	r.add ({process: m => m.label = '???'})
 	
@@ -99,7 +115,7 @@ class BotchedProcessor extends EventEmitter {
 
 test ('Router error', () => {
 
-	const r = new Router ()
+	const r = new Router ({name: 'Roo', logger})
 	
 	const p = new BotchedProcessor ()
 	
@@ -139,7 +155,7 @@ class BrokenProcessor extends EventEmitter {
 
 test ('Router error 2', () => {
 
-	const r = new Router ()
+	const r = new Router ({name: 'Roo', logger})
 
 	let msg
 
