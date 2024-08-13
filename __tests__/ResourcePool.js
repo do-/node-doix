@@ -13,7 +13,7 @@ const logger = winston.createLogger({
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
-class MockParentResource {	
+class MockParentResource extends EventEmitter {	
 	async get () {
 		return 'value'
 	}
@@ -128,13 +128,13 @@ test ('set Error', async () => {
 	
 	const onError = function (x) {caught = x}	
 
-	pool.on ('error', onError)
-
 	const job = new EventEmitter ()
-	
+
 	expect (pool.cnt).toBe (0)
 
 	await pool.toSet (job, 'db')
+
+	job.db.on ('error', onError)
 	
 	expect (pool.cnt).toBe (1)
 	
@@ -154,9 +154,7 @@ test ('proxy', async () => {
 
 	const pool = new MockPool ()
 
-	pool.on ('acquire', resource => resource.waitFor (
-		new Promise ((ok, fail) => ok (resource.f = true))
-	))
+	pool.onAcquire = resource => resource.f = true
 
 	pool.ten = 10
 	pool.shared.add ('ten')
