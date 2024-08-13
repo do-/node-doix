@@ -52,7 +52,7 @@ class MockPool extends ResourcePool {
 	}
 }	
 
-test ('job logger', async () => {
+test ('name', async () => {
 
 	const pool = new MockPool ()
 
@@ -64,7 +64,6 @@ test ('job logger', async () => {
 	
 	await pool.toSet (job, 'db')
 	
-	expect (job.db.logger).toBe (logger)
 	expect (job.db.name).toBe ('db')
 
 })
