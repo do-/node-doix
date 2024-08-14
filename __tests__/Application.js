@@ -84,30 +84,6 @@ test ('generators', () => {
 
 })
 
-test ('clone', () => {
-	
-	const app = new Application ({modules, logger}), svc = new JobSource (app, {name: 'svc'})
-	
-	const rq = {type: 'users', action: 'create', data: {label: 'admin'}}
-
-	const job = svc.createJob ()
-	job.rq = rq
-
-	{			
-		const j1 = job.clone ()
-		expect (j1.parent).toBe (job)
-		expect (j1.rq).toStrictEqual (rq)
-	}
-
-	{
-		const j2 = job.clone ({id: 1, action: undefined, data: undefined})
-		expect (j2.parent).toBe (job)
-		expect (j2.rq).toStrictEqual ({type: 'users', id: 1, action: undefined, data: undefined})
-	}
-
-})
-
-
 test ('job 0', async () => {
 
 	const a = []
@@ -127,7 +103,7 @@ test ('job 0', async () => {
 
 	const job = svc.createJob ()
 
-	const r = await job.clone ().toComplete ()
+	const r = await job.toComplete ()
 	
 	expect (r).toBeUndefined ()
 
