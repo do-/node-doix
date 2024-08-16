@@ -49,7 +49,7 @@ test ('onJobFinished', async () => {
 	const q = new TestQueue (app, {name: 'q3', rq: {type: 'users'}})
 
 	const j = q.createJob ()
-	await j.toBroadcast ('start')
+	await j.broadcast ('start')
 	expect (j.rq).toStrictEqual ({type: 'users', id: 1})
 
 	expect (a).toStrictEqual ([])	

@@ -57,7 +57,7 @@ test ('lag', async () => {
 
 		job.on ('finished', ok)
 
-		job.toComplete ().then (nop, nop)
+		job.outcome ().then (nop, nop)
 
 	}) 	
 
@@ -67,6 +67,6 @@ test ('lag', async () => {
 
 	jobSource.reset ()
 
-	expect (await jobSource.createJob ({type: 'users', id: 1}).toComplete ()).toStrictEqual ({id: 1})
+	expect (await jobSource.createJob ({type: 'users', id: 1}).outcome ()).toStrictEqual ({id: 1})
 
 })

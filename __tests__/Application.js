@@ -31,14 +31,14 @@ test ('job fail', async () => {
 	job.on ('error', e => {})
 	
 	job.setMaxLatency (Infinity)
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 
 	job.setMaxLatency (100)
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 	
 	job.rq.action = 'delete'
 
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 
 })
 
@@ -103,7 +103,7 @@ test ('job 0', async () => {
 
 	const job = svc.createJob ()
 
-	const r = await job.toComplete ()
+	const r = await job.outcome ()
 	
 	expect (r).toBeUndefined ()
 
@@ -174,7 +174,7 @@ test ('job ok', async () => {
 	})
 
 	const [r, duration] = await Promise.all ([
-		job.toComplete (),
+		job.outcome (),
 		toGetFinishd,
 	])
 
@@ -198,7 +198,7 @@ test ('job fail 2', async () => {
 
 	job.on ('start', j => j.fail (Error ('OK')))
 		
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 	
 })
 
@@ -218,7 +218,7 @@ test ('job fail on timeout 1', async () => {
 		)
 	})
 
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 	
 })
 
@@ -230,7 +230,7 @@ test ('job fail on timeout 2', async () => {
 
 	job.setMaxLatency (100)
 
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 	
 })
 
@@ -243,7 +243,7 @@ test ('job fail undefined', async () => {
 	job.on ('error', function () {delete this.error})
 	job.on ('start', function () {this.fail (Error ('OK'))})
 		
-	const r = await job.toComplete ()	
+	const r = await job.outcome ()	
 	expect (r).toBeUndefined ()
 	
 })
@@ -274,7 +274,7 @@ test ('job src fail', async () => {
 
 		expect (ended).toBeUndefined ()
 
-		await job0.toComplete ();
+		await job0.outcome ();
 
 		expect (ended === job0).toBe (true)
 
@@ -321,7 +321,7 @@ test ('job src fail', async () => {
 	expect (job.oo).toBe (o)
 	expect (jobSource.pending.size).toBe (1)
 
-	await expect (() => job.toComplete ()).rejects.toBeDefined ()
+	await expect (() => job.outcome ()).rejects.toBeDefined ()
 
 	expect (jobSource.pending.size).toBe (0)
 

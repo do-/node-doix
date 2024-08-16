@@ -62,7 +62,7 @@ test ('name', async () => {
 	
 	job.logger = logger
 	
-	await pool.toSet (job, 'db')
+	await pool.setResource (job, 'db')
 	
 	expect (job.db.name).toBe ('db')
 
@@ -90,7 +90,7 @@ test ('pool logger', async () => {
 
 	const job = new EventEmitter ()
 		
-	await pool.toSet (job, 'db')
+	await pool.setResource (job, 'db')
 	
 	expect (job.db.logger).toBe (logger)
 
@@ -108,7 +108,7 @@ test ('set OK', async () => {
 	
 	expect (pool.cnt).toBe (0)
 
-	await pool.toSet (job, 'db')
+	await pool.setResource (job, 'db')
 
 	expect (job.db.ten).toBe ('X')
 	
@@ -132,7 +132,7 @@ test ('set Error', async () => {
 
 	expect (pool.cnt).toBe (0)
 
-	await pool.toSet (job, 'db')
+	await pool.setResource (job, 'db')
 
 	job.db.on ('error', onError)
 	
