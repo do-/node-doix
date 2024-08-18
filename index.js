@@ -5,6 +5,5 @@ module.exports = {
 	JobSource: require ('./lib/JobSource.js'),
 	Queue: require ('./lib/Queue.js'),
 	MethodSelector: require ('./lib/MethodSelector.js'),
-	Router: require ('./lib/Router.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
 }
