@@ -1,6 +1,6 @@
 {
   "name": "doix",
-  "version": "1.0.44",
+  "version": "1.0.45",
   "description": "A general purpose sever side framework",
   "main": "index.js",
   "files": [
@@ -48,6 +48,6 @@
   "dependencies": {
     "croner": "^8.1.0",
     "events-to-winston": "^1.0.3",
-    "require-sliced": "^1.0.1"
+    "require-sliced": "^1.0.2"
   }
 }
