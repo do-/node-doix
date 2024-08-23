@@ -1,8 +1,8 @@
-const {MethodSelector} = require ('..')
+const {NamingConventions} = require ('..')
 
 test ('getModuleName', () => {
 
-	const m = new MethodSelector ()
+	const m = new NamingConventions ()
 		
 	expect (() => m.getModuleName ()).toThrow (TypeError)
 
@@ -18,7 +18,7 @@ test ('getModuleName', () => {
 
 test ('getMethodName', () => {
 
-	const m = new MethodSelector ()
+	const m = new NamingConventions ()
 	const type = 'users'
 
 	expect (m.getMethodName ({type})).toBe ('select_users')

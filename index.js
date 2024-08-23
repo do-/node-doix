@@ -4,6 +4,6 @@ module.exports = {
 	Lag: require ('./lib/Lag.js'),
 	JobSource: require ('./lib/JobSource.js'),
 	Queue: require ('./lib/Queue.js'),
-	MethodSelector: require ('./lib/MethodSelector.js'),
+	NamingConventions: require ('./lib/NamingConventions.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
 }

@@ -1,10 +1,10 @@
 const Path = require ('path')
-const {Application, MethodSelector, JobSource} = require ('..')
+const {Application, NamingConventions, JobSource} = require ('..')
 const {Tracker} = require ('events-to-winston')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
-class MS extends MethodSelector {getModuleName (o){return null}}
+class MS extends NamingConventions {getModuleName (o){return null}}
 
 const {Writable} = require ('stream')
 const winston = require ('winston')
@@ -50,14 +50,14 @@ test ('constructor', () => {
 	expect (() => {new Application ({logger})}).toThrow ()
 	expect (() => {new Application ({modules, logger, foo: 1})}).toThrow ()	
 	expect (() => {new Application ({modules, logger, pools: {db: {connectionString: '...'}}})}).toThrow ('ResourcePool')	
-	expect (() => {new Application ({modules, logger, methodSelector: 0})}).toThrow ()	
-	expect (new Application ({modules, logger, methodSelector: undefined})).toBeInstanceOf (Application)
-	expect (new Application ({modules, logger, methodSelector: new MS ()})).toBeInstanceOf (Application)
+	expect (() => {new Application ({modules, logger, NamingConventions: 0})}).toThrow ()	
+	expect (new Application ({modules, logger, NamingConventions: undefined})).toBeInstanceOf (Application)
+	expect (new Application ({modules, logger, NamingConventions: new MS ()})).toBeInstanceOf (Application)
 
 	const app = new Application ({modules, logger, pools: {}})
 	
 	expect (app).toBeInstanceOf (Application)
-	expect (app.methodSelector).toBeInstanceOf (MethodSelector)
+	expect (app.namingConventions).toBeInstanceOf (NamingConventions)
 
 })
 
