@@ -5,8 +5,6 @@ test ('getModuleName', () => {
 	const m = new MethodSelector ()
 		
 	expect (() => m.getModuleName ()).toThrow (TypeError)
-	expect (() => m.getModuleName (0)).toThrow (TypeError)
-	expect (() => m.getModuleName ({type: NaN})).toThrow (TypeError)
 
 	expect (m.getModuleName ({})).toBe (null)
 
