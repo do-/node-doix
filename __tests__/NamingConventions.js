@@ -1,18 +1,26 @@
-const {NamingConventions} = require ('..')
+const {NamingConventions} = require ('..'), {snakeToCamel} = NamingConventions
 
-test ('getModuleName', () => {
+test ('snakeToCamel', () => {
 
-	const m = new NamingConventions ()
-		
-	expect (() => m.getModuleName ()).toThrow (TypeError)
+	expect (() => snakeToCamel ()).toThrow ()
 
-	expect (m.getModuleName ({})).toBe (null)
+	expect (snakeToCamel ('')).toBe ('')
+	expect (snakeToCamel ('', true)).toBe ('')
 
-	for (const type of [null, undefined])
-		expect (m.getModuleName ({type})).toBe (null)
+	expect (snakeToCamel ('_')).toBe ('')
+	expect (snakeToCamel ('_', true)).toBe ('')
 
-	for (const type of ['users'])
-		expect (m.getModuleName ({type})).toBe (type)
+	expect (snakeToCamel ('___')).toBe ('')
+	expect (snakeToCamel ('___', true)).toBe ('')
+
+	expect (snakeToCamel ('get')).toBe ('get')
+	expect (snakeToCamel ('get', true)).toBe ('Get')
+	
+	expect (snakeToCamel ('get_id')).toBe ('getId')
+	expect (snakeToCamel ('get_id', true)).toBe ('GetId')
+
+	expect (snakeToCamel ('get_____id_')).toBe ('getId')
+	expect (snakeToCamel ('get_____id_', true)).toBe ('GetId')
 
 })
 
@@ -21,11 +29,11 @@ test ('getMethodName', () => {
 	const m = new NamingConventions ()
 	const type = 'users'
 
-	expect (m.getMethodName ({type})).toBe ('select_users')
-	expect (m.getMethodName ({type, id: 1})).toBe ('get_item_of_users')
-	expect (m.getMethodName ({type, part: 'vocs', id: 1})).toBe ('get_vocs_of_users')
-	expect (m.getMethodName ({type, part: 'vocs'})).toBe ('get_vocs_of_users')
-	expect (m.getMethodName ({type, action: 'create', id: 1})).toBe ('do_create_users')
-	expect (m.getMethodName ({type, action: 'create'})).toBe ('do_create_users')
+	expect (m.getName ('method', {type})).toBe ('select_users')
+	expect (m.getName ('method', {type, id: 1})).toBe ('get_item_of_users')
+	expect (m.getName ('method', {type, part: 'vocs', id: 1})).toBe ('get_vocs_of_users')
+	expect (m.getName ('method', {type, part: 'vocs'})).toBe ('get_vocs_of_users')
+	expect (m.getName ('method', {type, action: 'create', id: 1})).toBe ('do_create_users')
+	expect (m.getName ('method', {type, action: 'create'})).toBe ('do_create_users')
 
 })
