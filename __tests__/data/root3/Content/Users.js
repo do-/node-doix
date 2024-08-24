@@ -1,12 +1,12 @@
 module.exports = {
 
-    select_users: async function () {
+    getList: async function () {
     
-		return [{id: 1}]
+		  return [{id: 1}]
         
     },
 
-    do_wait_for_users: async function () {
+    waitFor: async function () {
 
       const timeout = this.rq.id
 
@@ -14,13 +14,13 @@ module.exports = {
 
     },
 
-    get_item_of_users: async function () {
+    getItem: async function () {
 
     	const {rq: {id}} = this
     	
     	if (isNaN (id)) throw Error ('Invalid id')
 
-		return {id}
+		  return {id}
 
     },
     

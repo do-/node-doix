@@ -24,16 +24,83 @@ test ('snakeToCamel', () => {
 
 })
 
-test ('getMethodName', () => {
+test ('bad', () => {
 
-	const m = new NamingConventions ()
+	expect (
+
+		() => new NamingConventions ({
+			module: {
+				case: 'ada',
+				name: rq => rq.type,
+			}
+		})
+			
+	).toThrow ()
+
+})
+
+test ('getModuleName old fashined', () => {
+
+	const m = new NamingConventions ({
+		module: {
+			case: 'snake',
+			name: rq => rq.type,
+		}
+	})
+
+	expect (m.getName ('module', {type: 'users'})).toBe ('users')
+	expect (m.getName ('module', {type: 'applications_to_reject'})).toBe ('applications_to_reject')
+
+})
+
+test ('getMethodName old fashined', () => {
+
+	const m = new NamingConventions ({
+		method: {
+			case: 'snake',
+			name: ({type, id, action, part}) => {
+
+				if (action) return 'do_' + action + '_' + type
+	
+				if (!part && id) part = 'item'
+		
+				return (part ? 'get_' + part + '_of': 'select') + '_' + type
+		
+			},
+		}
+	})
+
 	const type = 'users'
 
 	expect (m.getName ('method', {type})).toBe ('select_users')
 	expect (m.getName ('method', {type, id: 1})).toBe ('get_item_of_users')
-	expect (m.getName ('method', {type, part: 'vocs', id: 1})).toBe ('get_vocs_of_users')
-	expect (m.getName ('method', {type, part: 'vocs'})).toBe ('get_vocs_of_users')
+	expect (m.getName ('method', {type, part: 'privileges', id: 1})).toBe ('get_privileges_of_users')
+	expect (m.getName ('method', {type, part: 'privileges'})).toBe ('get_privileges_of_users')
 	expect (m.getName ('method', {type, action: 'create', id: 1})).toBe ('do_create_users')
 	expect (m.getName ('method', {type, action: 'create'})).toBe ('do_create_users')
+
+})
+
+test ('getModuleName', () => {
+
+	const m = new NamingConventions ()
+
+	expect (m.getName ('module', {type: 'users'})).toBe ('Users')
+	expect (m.getName ('module', {type: 'applications_to_reject'})).toBe ('ApplicationsToReject')
+
+})
+
+test ('getMethodName', () => {
+
+	const m = new NamingConventions ()
+
+	const type = 'users'
+
+	expect (m.getName ('method', {type})).toBe ('getList')
+	expect (m.getName ('method', {type, id: 1})).toBe ('getItem')
+	expect (m.getName ('method', {type, part: 'privileges', id: 1})).toBe ('getPrivileges')
+	expect (m.getName ('method', {type, part: 'privileges'})).toBe ('getPrivileges')
+	expect (m.getName ('method', {type, action: 'create', id: 1})).toBe ('create')
+	expect (m.getName ('method', {type, action: 'create'})).toBe ('create')
 
 })
