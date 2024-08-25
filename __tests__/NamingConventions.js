@@ -100,7 +100,7 @@ test ('getMethodName', () => {
 	expect (m.getName ('method', {type, id: 1})).toBe ('getItem')
 	expect (m.getName ('method', {type, part: 'privileges', id: 1})).toBe ('getPrivileges')
 	expect (m.getName ('method', {type, part: 'privileges'})).toBe ('getPrivileges')
-	expect (m.getName ('method', {type, action: 'create', id: 1})).toBe ('create')
-	expect (m.getName ('method', {type, action: 'create'})).toBe ('create')
+	expect (m.getName ('method', {type, action: 'create', id: 1})).toBe ('doCreate')
+	expect (m.getName ('method', {type, action: 'create'})).toBe ('doCreate')
 
 })

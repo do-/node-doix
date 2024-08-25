@@ -6,7 +6,7 @@ module.exports = {
         
     },
 
-    waitFor: async function () {
+    doWaitFor: async function () {
 
       const timeout = this.rq.id
 
