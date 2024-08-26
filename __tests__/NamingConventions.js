@@ -1,26 +1,28 @@
-const {NamingConventions} = require ('..'), {snakeToCamel} = NamingConventions
+const {NamingConventions} = require ('..')
 
-test ('snakeToCamel', () => {
+test ('toCamel', () => {
 
-	expect (() => snakeToCamel ()).toThrow ()
+	const m = new NamingConventions ()
 
-	expect (snakeToCamel ('')).toBe ('')
-	expect (snakeToCamel ('', true)).toBe ('')
+	expect (() => m.toCamel ()).toThrow ()
 
-	expect (snakeToCamel ('_')).toBe ('')
-	expect (snakeToCamel ('_', true)).toBe ('')
+	expect (m.toCamel ('')).toBe ('')
+	expect (m.toCamel ('', true)).toBe ('')
 
-	expect (snakeToCamel ('___')).toBe ('')
-	expect (snakeToCamel ('___', true)).toBe ('')
+	expect (m.toCamel ('_')).toBe ('')
+	expect (m.toCamel ('_', true)).toBe ('')
 
-	expect (snakeToCamel ('get')).toBe ('get')
-	expect (snakeToCamel ('get', true)).toBe ('Get')
+	expect (m.toCamel ('___')).toBe ('')
+	expect (m.toCamel ('___', true)).toBe ('')
+
+	expect (m.toCamel ('get')).toBe ('get')
+	expect (m.toCamel ('get', true)).toBe ('Get')
 	
-	expect (snakeToCamel ('get_id')).toBe ('getId')
-	expect (snakeToCamel ('get_id', true)).toBe ('GetId')
+	expect (m.toCamel ('get_id')).toBe ('getId')
+	expect (m.toCamel ('get_id', true)).toBe ('GetId')
 
-	expect (snakeToCamel ('get_____id_')).toBe ('getId')
-	expect (snakeToCamel ('get_____id_', true)).toBe ('GetId')
+	expect (m.toCamel ('get_____id_')).toBe ('getId')
+	expect (m.toCamel ('get_____id_', true)).toBe ('GetId')
 
 })
 
