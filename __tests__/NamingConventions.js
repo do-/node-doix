@@ -51,7 +51,7 @@ test ('getModuleName old fashined', () => {
 
 	const m = new NamingConventions ({types: {
 		module: {
-			case: 'snake',
+			case: 'none',
 			name: rq => rq.type,
 		}
 	}})
@@ -65,7 +65,7 @@ test ('getMethodName old fashined', () => {
 
 	const m = new NamingConventions ({types: {
 		method: {
-			case: 'snake',
+			case: 'none',
 			name: ({type, id, action, part}) => {
 
 				if (action) return 'do_' + action + '_' + type
