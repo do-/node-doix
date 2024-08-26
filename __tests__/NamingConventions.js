@@ -42,6 +42,8 @@ test ('bad', () => {
 	const m = new NamingConventions ()
 
 	expect (() => m.getName ('m&m', {type: 'users'})).toThrow ()
+	expect (() => m.getName ('module', {type: 0})).toThrow ()
+	expect (() => m.getName ('module', {type: 'a'.repeat (65)})).toThrow ()
 
 })
 
