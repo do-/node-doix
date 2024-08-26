@@ -28,25 +28,29 @@ test ('bad', () => {
 
 	expect (
 
-		() => new NamingConventions ({
+		() => new NamingConventions ({types: {
 			module: {
 				case: 'ada',
 				name: rq => rq.type,
 			}
-		})
+		}})
 			
 	).toThrow ()
+
+	const m = new NamingConventions ()
+
+	expect (() => m.getName ('m&m', {type: 'users'})).toThrow ()
 
 })
 
 test ('getModuleName old fashined', () => {
 
-	const m = new NamingConventions ({
+	const m = new NamingConventions ({types: {
 		module: {
 			case: 'snake',
 			name: rq => rq.type,
 		}
-	})
+	}})
 
 	expect (m.getName ('module', {type: 'users'})).toBe ('users')
 	expect (m.getName ('module', {type: 'applications_to_reject'})).toBe ('applications_to_reject')
@@ -55,7 +59,7 @@ test ('getModuleName old fashined', () => {
 
 test ('getMethodName old fashined', () => {
 
-	const m = new NamingConventions ({
+	const m = new NamingConventions ({types: {
 		method: {
 			case: 'snake',
 			name: ({type, id, action, part}) => {
@@ -68,7 +72,7 @@ test ('getMethodName old fashined', () => {
 		
 			},
 		}
-	})
+	}})
 
 	const type = 'users'
 
