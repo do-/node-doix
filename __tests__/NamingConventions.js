@@ -21,6 +21,12 @@ test ('toCamel', () => {
 	expect (m.toCamel ('get_id')).toBe ('getId')
 	expect (m.toCamel ('get_id', true)).toBe ('GetId')
 
+	expect (m.toCamel ('get_id2')).toBe ('getId2')
+	expect (m.toCamel ('get_id2', true)).toBe ('GetId2')
+
+	expect (m.toCamel ('get_2id')).toBe ('get2id')
+	expect (m.toCamel ('get_2id', true)).toBe ('Get2id')
+
 	expect (m.toCamel ('get_____id_')).toBe ('getId')
 	expect (m.toCamel ('get_____id_', true)).toBe ('GetId')
 
@@ -44,6 +50,10 @@ test ('bad', () => {
 	expect (() => m.getName ('m&m', {type: 'users'})).toThrow ()
 	expect (() => m.getName ('module', {type: 0})).toThrow ()
 	expect (() => m.getName ('module', {type: 'a'.repeat (65)})).toThrow ()
+	expect (() => m.getName ('module', {type: '0ne'})).toThrow ('at position 0')
+	expect (() => m.getName ('module', {type: 'moustashe{'})).toThrow ('at position 9')
+	expect (() => m.getName ('module', {type: 'no way'})).toThrow ('at position 2')
+	expect (() => m.getName ('module', {type: 'm@ail'})).toThrow ('at position 1')
 
 })
 
@@ -109,6 +119,6 @@ test ('getMethodName', () => {
 	expect (m.getName ('method', {type, part: 'privileges', id: 1})).toBe ('getPrivileges')
 	expect (m.getName ('method', {type, part: 'privileges'})).toBe ('getPrivileges')
 	expect (m.getName ('method', {type, action: 'create', id: 1})).toBe ('doCreate')
-	expect (m.getName ('method', {type, action: 'create'})).toBe ('doCreate')
+	expect (m.getName ('method', {type, action: 'create_2'})).toBe ('doCreate2')
 
 })
