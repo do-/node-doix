@@ -90,7 +90,7 @@ test ('job 0', async () => {
 	
 	const app = new Application ({modules, logger, handlers: {
 
-		start: _ => a.push (1),
+		init: _ => a.push (1),
 
 		finish: [
 			_ => a.push (2),
@@ -160,7 +160,7 @@ test ('job ok', async () => {
 	job.setMinLatency (100)
 	job.setMaxLatency (10000)
 
-	job.on ('start', () => {
+	job.on ('init', () => {
 		job.waitFor (a ())
 	})
 
@@ -196,7 +196,7 @@ test ('job fail 2', async () => {
 	const svc = new JobSource (app, {name: 'svc'})
 	const job = svc.createJob ()
 
-	job.on ('start', j => j.fail (Error ('OK')))
+	job.on ('init', j => j.fail (Error ('OK')))
 		
 	await expect (() => job.outcome ()).rejects.toBeDefined ()
 	
@@ -210,7 +210,7 @@ test ('job fail on timeout 1', async () => {
 
 	job.setMaxLatency (100)
 
-	job.on ('start', function () {
+	job.on ('init', function () {
 		this.waitFor (
 			new Promise (ok => {
 				setTimeout (ok, 500);
@@ -241,7 +241,7 @@ test ('job fail undefined', async () => {
 	const job = svc.createJob ()
 
 	job.on ('error', function () {delete this.error})
-	job.on ('start', function () {this.fail (Error ('OK'))})
+	job.on ('init', function () {this.fail (Error ('OK'))})
 		
 	const r = await job.outcome ()	
 	expect (r).toBeUndefined ()
@@ -289,7 +289,7 @@ test ('job src fail', async () => {
 		globals: {o},
 		generators: {oo: () => o},
 		on: {
-			start: j => j.fail (Error ('OK')),
+			init: j => j.fail (Error ('OK')),
 			method: [
 				j => j,
 				j => j,
@@ -304,7 +304,7 @@ test ('job src fail', async () => {
 	const last = {}
 
 	for (const event of [
-		'job-start',
+		'job-init',
 		'job-end',
 		'job-error',
 		'job-finish',
@@ -326,7 +326,7 @@ test ('job src fail', async () => {
 	expect (jobSource.pending.size).toBe (0)
 
 	expect (Object.keys (last)).toStrictEqual ([
-		'job-start',
+		'job-init',
 		'job-error',
 		'job-finish',
 		'job-finished',
