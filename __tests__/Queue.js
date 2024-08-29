@@ -62,7 +62,7 @@ test ('nullrequest', async () => {
 
 	const q = new Queue (app, {name: 'q4'}), j = new EventEmitter ()
 
-	await q.onJobStart (j)
+	await q.onJobInit (j)
 
 	expect (j.request).toStrictEqual ({})
 
@@ -76,7 +76,7 @@ test ('bad peek', async () => {
 
 	const q = new TestQueue (app, {name: 'q5'})
 
-	await expect (() => q.onJobStart ({})).rejects.toBeDefined ()
+	await expect (() => q.onJobInit ({})).rejects.toBeDefined ()
 
 })
 
