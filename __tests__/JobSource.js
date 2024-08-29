@@ -55,7 +55,7 @@ test ('lag', async () => {
 
 		const nop = _ => _
 
-		job.on ('finished', ok)
+		job.on ('next', ok)
 
 		job.outcome ().then (nop, nop)
 

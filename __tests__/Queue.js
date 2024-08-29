@@ -34,7 +34,7 @@ test ('maxPending', async () => {
 
 })
 
-test ('onJobFinished', async () => {
+test ('onJobnext', async () => {
 
 	const a = [], CHECK = Symbol ('check')
 
@@ -53,7 +53,7 @@ test ('onJobFinished', async () => {
 	expect (j.request).toStrictEqual ({type: 'users', id: 1})
 
 	expect (a).toStrictEqual ([])	
-	j.emit ('finished')
+	j.emit ('next')
 	expect (a).toStrictEqual ([CHECK])
 
 })
@@ -100,7 +100,7 @@ test ('check ()', async () => {
 			}
 		})
 
-		q.on ('job-finished', () => {
+		q.on ('job-next', () => {
 			if (q.pending.size === 0) ok ()
 		})
 	
@@ -150,7 +150,7 @@ test ('cron', async () => {
 			}
 		})
 
-		q.on ('job-finished', () => {
+		q.on ('job-next', () => {
 			if (q.pending.size === 0) ok ()
 		})
 

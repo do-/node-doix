@@ -170,7 +170,7 @@ test ('job ok', async () => {
 	})
 
 	const toGetFinishd = new Promise ((ok) => {
-		job.on ('finished', () => ok (Date.now () - t0))
+		job.on ('next', () => ok (Date.now () - t0))
 	})
 
 	const [r, duration] = await Promise.all ([
@@ -308,7 +308,7 @@ test ('job src fail', async () => {
 		'job-end',
 		'job-error',
 		'job-finish',
-		'job-finished',
+		'job-next',
 	]) jobSource.on (event, payload => last [event] = payload)
 
 	expect (jobSource.capacity).toBe (Infinity)
@@ -329,7 +329,7 @@ test ('job src fail', async () => {
 		'job-init',
 		'job-error',
 		'job-finish',
-		'job-finished',
+		'job-next',
 	])
 
 	for (const k in last) {
