@@ -25,8 +25,8 @@ test ('job fail', async () => {
 	expect (Object.keys (job.tracker.events).sort ()).toStrictEqual (['error', 'start', 'stop'])
 
 	job.app = app
-	job.rq.type = 'users'
-	job.rq.id = 'AAA'
+	job.request.type = 'users'
+	job.request.id = 'AAA'
 	
 	job.on ('error', e => {})
 	
@@ -36,7 +36,7 @@ test ('job fail', async () => {
 	job.setMaxLatency (100)
 	await expect (() => job.outcome ()).rejects.toBeDefined ()
 	
-	job.rq.action = 'delete'
+	job.request.action = 'delete'
 
 	await expect (() => job.outcome ()).rejects.toBeDefined ()
 
@@ -143,8 +143,8 @@ test ('job ok', async () => {
 
 	const job = svc.createJob ()
 
-	job.rq.type = 'users'
-	job.rq.id = id
+	job.request.type = 'users'
+	job.request.id = id
 	
 	const a = async () => {}
 
@@ -185,7 +185,7 @@ test ('job ok', async () => {
 	const lines = s.trim ().split ('\n').map (s => s.trim ())
 
 	expect (lines).toHaveLength (2)
-	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 Users.getItem {"rq":{"type":"users","id":28}}$/)
+	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 Users.getItem {"request":{"type":"users","id":28}}$/)
 	expect (lines [1]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 \d+ ms/)
 
 })
@@ -259,7 +259,7 @@ test ('job src fail', async () => {
 			lag: 10, 
 			maxLatency: 10000, 
 			maxPending: 1, 
-			rq: {type: 'users'}
+			request: {type: 'users'}
 		})
 
 		expect (jobSource0.capacity).toBe (1)
@@ -268,7 +268,7 @@ test ('job src fail', async () => {
 
 		expect (jobSource0.capacity).toBe (0)
 
-		expect (job0.rq).toStrictEqual ({type: 'users', id: 1})
+		expect (job0.request).toStrictEqual ({type: 'users', id: 1})
 
 		let ended; jobSource0.on ('job-end', payload => ended = payload)
 

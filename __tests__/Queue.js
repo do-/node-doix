@@ -46,11 +46,11 @@ test ('onJobFinished', async () => {
 		}
 	}
 
-	const q = new TestQueue (app, {name: 'q3', rq: {type: 'users'}})
+	const q = new TestQueue (app, {name: 'q3', request: {type: 'users'}})
 
 	const j = q.createJob ()
 	await j.broadcast ('start')
-	expect (j.rq).toStrictEqual ({type: 'users', id: 1})
+	expect (j.request).toStrictEqual ({type: 'users', id: 1})
 
 	expect (a).toStrictEqual ([])	
 	j.emit ('finished')
@@ -58,13 +58,13 @@ test ('onJobFinished', async () => {
 
 })
 
-test ('nullRq', async () => {
+test ('nullrequest', async () => {
 
 	const q = new Queue (app, {name: 'q4'}), j = new EventEmitter ()
 
 	await q.onJobStart (j)
 
-	expect (j.rq).toStrictEqual ({})
+	expect (j.request).toStrictEqual ({})
 
 })
 
@@ -92,7 +92,7 @@ test ('check ()', async () => {
 
 		const q = new TestQueue (app, {
 			name: 'q6',
-			rq: {type: 'users'},
+			request: {type: 'users'},
 			on: {
 				end:    function () {r.push (this.result)},
 				error:  function () {fail (this.error)},
@@ -141,7 +141,7 @@ test ('cron', async () => {
 
 		const q = new TestQueue (app, {
 			name: 'q7',
-			rq: {type: 'users'},
+			request: {type: 'users'},
 			cron: '* * * * * *',
 			on: {
 				end:    function () {r.push (this.result)},

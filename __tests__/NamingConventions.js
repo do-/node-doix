@@ -39,7 +39,7 @@ test ('bad', () => {
 		() => new NamingConventions ({types: {
 			module: {
 				case: 'ada',
-				name: rq => rq.type,
+				name: request => request.type,
 			}
 		}})
 			
@@ -62,7 +62,7 @@ test ('getModuleName old fashined', () => {
 	const m = new NamingConventions ({types: {
 		module: {
 			case: 'none',
-			name: rq => rq.type,
+			name: request => request.type,
 		}
 	}})
 

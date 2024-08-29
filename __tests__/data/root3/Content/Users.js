@@ -8,7 +8,7 @@ module.exports = {
 
     doWaitFor: async function () {
 
-      const timeout = this.rq.id
+      const timeout = this.request.id
 
       return new Promise (ok => setTimeout (ok, timeout))
 
@@ -16,7 +16,7 @@ module.exports = {
 
     getItem: async function () {
 
-    	const {rq: {id}} = this
+    	const {request: {id}} = this
     	
     	if (isNaN (id)) throw Error ('Invalid id')
 
