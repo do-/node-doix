@@ -1,20 +1,17 @@
 ![workflow](https://github.com/do-/node-doix/actions/workflows/main.yml/badge.svg)
 ![Jest coverage](./badges/coverage-jest%20coverage.svg)
 
-`doix` is a node.js based framework for building middleware applications. 
+`doix` is a node.js based framework for building middleware: systems that process requests by executing business methods using [pooled](https://github.com/do-/node-doix/wiki/ResourcePool) resources, in a manageable and observable way. Each request is handled by a one-off object called [job](https://github.com/do-/node-doix/wiki/Job) which [`job.outcome ()`](https://github.com/do-/node-doix/wiki/Job#outcome-) method implements the common workflow: from fetching request details to cleaning things up.
 
-The core module is pretty dependency free, so it contains only general purpose, mostly abstract classes. Their bindings to specific protocols and external libraries are implemented in multiple sibling projects:
+The workflow's main step is invoking a business method: one per job. All methods possibly called by a job belong to [modules](https://github.com/do-/node-require-sliced/wiki/ModuleMap) of the hosting [application](https://github.com/do-/node-doix/wiki/Application). The exact method to call is determined by applying the [application](https://github.com/do-/node-doix/wiki/Application)'s [naming conventions](https://github.com/do-/node-doix/wiki/NamingConventions) to the request content.
 
-* [doix-http](https://github.com/do-/node-doix-http) — for building Web applications
-  * cookie based session providers:
-    * [doix-http-cookie-jwt](https://github.com/do-/node-doix-http-cookie-jwt) — using [JSON Web tokens](https://jwt.io/)
-    * [doix-http-cookie-redis](https://github.com/do-/node-doix-http-cookie-redis) — using [Redis](https://redis.io/) cache
-  * bindings to Web frameworks:
-    * [doix-devextreme](https://github.com/do-/node-doix-devextreme) — [DevExtreme](https://js.devexpress.com) AJAX request parser 
-    * [doix-w2ui](https://github.com/do-/node-doix-w2ui) — [w2ui](https://w2ui.com/) AJAX request parser 
-* [doix-db](https://github.com/do-/node-doix-db) — the common part for database drivers
-  * [doix-db-postgresql](https://github.com/do-/node-doix-db-postgresql) — [PostgreSQL DBMS](https://www.postgresql.org/) adapter
-  * [doix-db-clickhouse](https://github.com/do-/node-doix-db-clickhouse) — [ClickHouse DBMS](https://clickhouse.com/) adapter
-* [node-doix-legacy](https://github.com/do-/node-doix-legacy) — a compatibility layer for some existing projects
+Other than that, the job's lifecycle includes adjusting the request, validating / sanitating it, reporting the result obtained or the error caught, disposing all resources possibly used. As one [Job](https://github.com/do-/node-doix/wiki/Job) class serves all kinds of requests, all these tasks are subject to per instance configuration: it's set up by each specific job [source](https://github.com/do-/node-doix/wiki/JobSource). The point here is to isolate routine work: the application developer mostly implements the pure business logic as [modules](https://github.com/do-/node-require-sliced/wiki/ModuleMap) code, all the rest being provided by the framework and its global configuration.
 
-More information is available in [wiki](https://github.com/do-/node-doix/wiki) documentation.
+For instance, in `doix`, the whole data processing is [transparently logged](https://github.com/do-/node-events-to-winston): each meaningful event related to a request is communicated to [winston](https://github.com/winstonjs/winston), tagged for later analysis. Related events have related tags (e. g. messages from jobs coming from the same source have IDs with a common prefix).
+
+The job's time to live can be limited, and both ways. First, the maximum latency can be configured for any [job source](https://github.com/do-/node-doix/wiki/JobSource), to cause errors on expiration. On the other hand, the special source class, [`Queue`](https://github.com/do-/node-doix/wiki/Queue), 
+ lets implement a sequential single threaded request processing with a controlled throughput.
+
+Although `doix` is designed to work with HTTP as the prime source of incoming messages, its core is mostly abstract and protocol agnostic, but there is a series of specific companion modules, e. g. [`doix-http`](https://github.com/do-/node-doix-http) featuring the [WebService](https://github.com/do-/node-doix-http/wiki/WebService) class: a source of [jobs](https://github.com/do-/node-doix/wiki/Job) bound to an HTTP listener.
+
+Similarly, the base library contains no example of the aforementioned [resource pools](https://github.com/do-/node-doix/wiki/ResourcePool). They are basically supposed to be wrappers around database drivers, so, to avoid adding unnecessary dependencies, such pieces of code are maintained separately: for example, [`doix-db-postgresql`](https://github.com/do-/node-doix-db-postgresql).
