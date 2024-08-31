@@ -1,5 +1,5 @@
 const Path = require ('path')
-const {Application, NamingConventions, JobSource} = require ('..')
+const {Application, NamingConventions, JobSource, Job} = require ('..')
 const {Tracker} = require ('events-to-winston')
 
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
@@ -197,8 +197,17 @@ test ('job fail 2', async () => {
 	const job = svc.createJob ()
 
 	job.on ('init', j => j.fail (Error ('OK')))
-		
-	await expect (() => job.outcome ()).rejects.toBeDefined ()
+
+	let x
+
+	try {
+		await job.outcome ()
+	}
+	catch (e) {
+		x = e
+	}
+
+	expect (x [Job.INSTANCE]).toBe (job)
 	
 })
 
