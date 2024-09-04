@@ -23,5 +23,11 @@ module.exports = {
 		  return {id}
 
     },
+
+    getOne: async function () {
+
+      throw 1
+
+    },
     
 }

@@ -211,6 +211,29 @@ test ('job fail 2', async () => {
 	
 })
 
+test ('job fail 3', async () => {
+
+	const app = new Application ({modules, logger})
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ({type: 'users', part: 'one'})
+
+	let x
+
+	try {
+		await job.outcome ()
+	}
+	catch (e) {
+		x = e
+	}
+
+	expect (x.message).toMatch ('"1"')
+	expect (x.message).toMatch ('Users.getOne')
+	expect (x [Job.INSTANCE]).toBe (job)
+
+	expect (new Job.NotAnError ('1'.repeat (33), job.method).message).toMatch ('... (1 more)')
+	
+})
+
 test ('job fail on timeout 1', async () => {
 
 	const app = new Application ({modules, logger})
