@@ -29,5 +29,11 @@ module.exports = {
       throw 1
 
     },
+
+    doFail: async function () {
+
+      this.raise ('DEBUG', {field: 'id'})
+
+    },
     
 }

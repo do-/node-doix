@@ -234,6 +234,35 @@ test ('job fail 3', async () => {
 	
 })
 
+
+
+test ('job fail 4', async () => {
+
+	const app = new Application ({modules, logger})
+	const svc = new JobSource (app, {name: 'svc'})
+	const job = svc.createJob ({type: 'users', action: 'fail'})
+
+	let x
+
+	try {
+		await job.outcome ()
+	}
+	catch (e) {
+		x = e
+	}
+
+	expect (x).toBeInstanceOf (Job.CustomError)
+	expect (x.message).toBe ('DEBUG')
+	expect (x.field).toBe ('id')
+	expect (x [Job.INSTANCE]).toBe (job)
+	expect (x [Job.PAYLOAD]).toStrictEqual ({field: 'id'})
+
+	expect (new Job.CustomError ('DEBUG') [Job.PAYLOAD]).toStrictEqual ({})
+	expect (new Job.CustomError ('DEBUG', null) [Job.PAYLOAD]).toBeNull
+
+})
+
+
 test ('job fail on timeout 1', async () => {
 
 	const app = new Application ({modules, logger})
