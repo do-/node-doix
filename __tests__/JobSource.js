@@ -43,7 +43,7 @@ test ('lag', async () => {
 
 	const app = new Application ({modules, logger})
 
-	const jobSource = new JobSource (app, {lag: [10, Infinity], name: 's3'})
+	const jobSource = new JobSource (app, {lag: [11, Infinity], name: 's3'})
 
 	const job = jobSource.createJob ({type: 'userz', id: 1})
 
@@ -68,5 +68,24 @@ test ('lag', async () => {
 	jobSource.reset ()
 
 	expect (await jobSource.createJob ({type: 'users', id: 1}).outcome ()).toStrictEqual ({id: 1})
+
+})
+
+test ('parent', async () => {
+
+	const app = new Application ({modules, logger})
+
+	const jobSource = new JobSource (app, {name: 's4'})
+
+	const job1 = jobSource.createJob ({type: 'users', id: 1})
+	const job2 = jobSource.createJob ({type: 'users', id: 2}, {parent: job1})
+
+	expect (() => jobSource.createJob ({type: 'users', id: 2}, {parent: 0})).toThrow ()
+
+	expect (job1.parent).toBeUndefined ()
+	expect (job2.parent).toBe (job1)
+
+	expect (job2.tracker.id).toMatch (job1.tracker.id)
+	expect (job1.tracker.id).not.toMatch (job2.tracker.id)
 
 })
