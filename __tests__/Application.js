@@ -50,9 +50,9 @@ test ('constructor', () => {
 	expect (() => {new Application ({logger})}).toThrow ()
 	expect (() => {new Application ({modules, logger, foo: 1})}).toThrow ()	
 	expect (() => {new Application ({modules, logger, pools: {db: {connectionString: '...'}}})}).toThrow ('ResourcePool')	
-	expect (() => {new Application ({modules, logger, NamingConventions: 0})}).toThrow ()	
-	expect (new Application ({modules, logger, NamingConventions: undefined})).toBeInstanceOf (Application)
-	expect (new Application ({modules, logger, NamingConventions: new MS ()})).toBeInstanceOf (Application)
+	expect (() => {new Application ({modules, logger, namingConventions: 0})}).toThrow ()	
+	expect (new Application ({modules, logger, namingConventions: undefined})).toBeInstanceOf (Application)
+	expect (new Application ({modules, logger, namingConventions: new MS ()})).toBeInstanceOf (Application)
 
 	const app = new Application ({modules, logger, pools: {}})
 	
@@ -63,7 +63,12 @@ test ('constructor', () => {
 
 test ('globals', () => {
 	
-	const app = new Application ({modules, logger, globals: {PI: 3.14}}), svc = new JobSource (app, {name: 'svc'})
+	const app = new Application ({
+		modules, 
+		logger, 
+		globals: {PI: 3.14},
+		namingConventions: new NamingConventions (),
+	}), svc = new JobSource (app, {name: 'svc'})
 
 	const job = svc.createJob ()
 			

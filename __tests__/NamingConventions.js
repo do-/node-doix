@@ -108,6 +108,21 @@ test ('getModuleName', () => {
 
 })
 
+test ('none', () => {
+
+	const m = new NamingConventions ({
+		types: {
+			method: {
+				name: o => o.part,
+				case: 'none',
+			} 
+		}	
+	})
+
+	expect (m.getName ('method', {part: 'getRequest'})).toBe ('getRequest')
+
+})
+
 test ('getMethodName', () => {
 
 	const m = new NamingConventions ()
