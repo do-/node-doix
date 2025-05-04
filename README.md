@@ -5,9 +5,7 @@
 
 # tl;dr
 
-For a kick start, you may take [doix-http](https://github.com/do-/node-doix-http/wiki), make a tiny Web service and play with it.
-
-Probably, at some point you'll need database connectivity: then use [doix-db](https://github.com/do-/node-doix-db/wiki).
+You may clone [the sample application](https://github.com/do-/node-doix-template-app) and play with it consulting the [step by step guide](https://github.com/do-/node-doix-template-app/wiki).
 
 # Description
 
