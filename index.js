@@ -6,4 +6,5 @@ module.exports = {
 	Queue: require ('./lib/Queue.js'),
 	NamingConventions: require ('./lib/NamingConventions.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
+	LinkedQueue: require ('./lib/LinkedQueue.js'),
 }

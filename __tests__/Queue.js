@@ -1,7 +1,7 @@
 const EventEmitter = require ('events')
 const process = require('node:process')
 const Path = require ('path')
-const {Job, Application, Queue} = require ('..')
+const {Job, Application, Queue, LinkedQueue} = require ('..')
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
 const {Writable} = require ('stream')
@@ -75,6 +75,40 @@ test ('bad peek', async () => {
 	const q = new TestQueue (app, {name: 'q5'})
 
 	await expect (() => q.onJobInit ({})).rejects.toBeDefined ()
+
+})
+
+test ('linked', async () => {
+
+	const r = []
+
+	await new Promise ((ok, fail) => {
+
+		const q = new LinkedQueue (app, {
+			name: 'ql',
+			request: {type: 'users'},
+			on: {
+				end:    function () {r.push (this.result.id)},
+				error:  function () {fail (this.error)},
+			}
+		})
+
+		q.maxPending = 0
+
+		q.add ({id: 1})
+
+		q.maxPending = 1
+
+		q.add ({id: 2})
+		q.add ({id: 3})
+
+		q.on ('job-next', () => {
+			if (q.pending.size === 0) ok ()
+		})
+		
+	})
+
+	expect (r).toStrictEqual ([1, 2, 3])
 
 })
 
