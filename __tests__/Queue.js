@@ -80,27 +80,37 @@ test ('bad peek', async () => {
 
 test ('linked', async () => {
 
+	expect (() => new LinkedQueue (app, {maxSize: '10'})).toThrow ()
+	expect (() => new LinkedQueue (app, {maxSize: -1})).toThrow ()
+	expect (() => new LinkedQueue (app, {maxSize: 1e100})).toThrow ()
+
+	expect (new LinkedQueue (app, {name: 'yeeeeeet'}).maxSize).toBe (Infinity)
+
 	const r = []
+
+	const q = new LinkedQueue (app, {
+		name: 'ql',
+		maxSize: 3,
+		request: {type: 'users'},
+		on: {
+			end:    function () {r.push (this.result.id)},
+			error:  function () {fail (this.error)},
+		}
+	})
 
 	await new Promise ((ok, fail) => {
 
-		const q = new LinkedQueue (app, {
-			name: 'ql',
-			request: {type: 'users'},
-			on: {
-				end:    function () {r.push (this.result.id)},
-				error:  function () {fail (this.error)},
-			}
-		})
 
 		q.maxPending = 0
 
 		q.add ({id: 1})
-
-		q.maxPending = 1
-
 		q.add ({id: 2})
 		q.add ({id: 3})
+
+		expect (() => q.add ({id: 4})).toThrow ()
+
+		q.maxPending = 1
+		q.check ()
 
 		q.on ('job-next', () => {
 			if (q.pending.size === 0) ok ()
@@ -109,6 +119,9 @@ test ('linked', async () => {
 	})
 
 	expect (r).toStrictEqual ([1, 2, 3])
+
+	q.add ({id: 4})
+
 
 })
 
