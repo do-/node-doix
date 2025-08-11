@@ -4,13 +4,12 @@ const Path = require ('path')
 const {Job, Application, Queue, LinkedQueue} = require ('..')
 const modules = {dir: {root: Path.join (__dirname, 'data', 'root3')}}
 
-const {Writable} = require ('stream')
 const winston = require ('winston')
 const logger = winston.createLogger({
 	transports: [
-//	  new winston.transports.Console ()
-	  new winston.transports.Stream ({stream: new Writable ({write(){}})})
-	]
+	  new winston.transports.Console ()
+	],
+	silent: true,
 })
 
 const app = new Application ({
@@ -98,12 +97,14 @@ test ('linked', async () => {
 		}
 	})
 
-	await new Promise ((ok, fail) => {
+	let cp = 0; q.on ('+', _ => cp ++)
+	let cm = 0; q.on ('-', _ => cm ++)
 
+	await new Promise ((ok, fail) => {
 
 		q.maxPending = 0
 
-		q.add ({id: 1})
+		q.add ({id: 1})		
 		q.add ({id: 2})
 		q.add ({id: 3})
 
@@ -119,6 +120,9 @@ test ('linked', async () => {
 	})
 
 	expect (r).toStrictEqual ([1, 2, 3])
+
+	expect (cp).toBe (3)
+	expect (cm).toBe (3)
 
 	q.add ({id: 4})
 
