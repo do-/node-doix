@@ -56,6 +56,8 @@ test ('name', async () => {
 
 	const pool = new MockPool ()
 
+	expect (pool).toBeInstanceOf (EventEmitter)
+
 	const job = new EventEmitter ()
 	
 	const logger = {}
