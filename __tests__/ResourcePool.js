@@ -1,6 +1,7 @@
 const EventEmitter = require ('events')
 const Path = require ('path')
 const {ResourcePool, Application, JobSource} = require ('..')
+const {Tracker} = require ('events-to-winston')
 
 const {Writable} = require ('stream')
 const winston = require ('winston')
@@ -41,8 +42,8 @@ class MockResourceRoman extends MockResource {
 }
 
 class MockPool extends ResourcePool {
-	constructor () {
-		super ()
+	constructor (o) {
+		super (o)
 		this.wrapper = MockResource
 		this.cnt = 0
 	}
@@ -72,23 +73,9 @@ test ('name', async () => {
 
 test ('pool logger', async () => {
 
-	const logger = {}
+	const pool = new MockPool ({logger})
 
-	class MockResource2 extends MockResource {	
-		constructor (raw) {
-			super (raw)
-			this.logger = logger
-		}
-	}
-
-	class MockPool2 extends MockPool {	
-		constructor () {
-			super ()
-			this.wrapper = MockResource2
-		}
-	}
-
-	const pool = new MockPool2 ()
+	expect (pool.tracker).toBeInstanceOf (Tracker)
 
 	const job = new EventEmitter ()
 		
