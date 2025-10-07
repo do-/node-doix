@@ -75,12 +75,14 @@ test ('pool logger', async () => {
 
 	const pool = new MockPool ({logger})
 
+	pool.app = {}
+
 	expect (pool.tracker).toBeInstanceOf (Tracker)
 
 	const job = new EventEmitter ()
 		
 	await pool.setResource (job, 'db')
-	
+
 	expect (job.db.logger).toBe (logger)
 
 })
@@ -195,6 +197,7 @@ test ('app pools', async () => {
 	expect ([...job.resources (String)]).toStrictEqual ([])
 
 	expect (pool.app).toBe (app)
+	expect (pool.logger).toBe (app.logger)
 	expect (pool.name).toBe ('db')
 
 	expect (await db.do (1)).toBe (1)
