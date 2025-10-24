@@ -17,6 +17,17 @@ const app = new Application ({
 	logger
 })
 
+test ('bad', async () => {
+
+	expect (() => new Queue (app, {name: 'qx', cron: 1})).toThrow ('type')
+	expect (() => new Queue (app, {name: 'qx', cron: ''})).toThrow ('nvalid')
+	expect (() => new Queue (app, {name: 'qx', interval: '10'})).toThrow ('type')
+	expect (() => new Queue (app, {name: 'qx', interval: -1})).toThrow ('nvalid')
+	expect (() => new Queue (app, {name: 'qx', interval: 2147483648})).toThrow ('nvalid')
+	expect (() => new Queue (app, {name: 'qx', cron: '* * * * * *', interval: 10})).toThrow ('exclusive')
+
+})
+
 test ('maxPending', async () => {
 
 	{
@@ -178,7 +189,7 @@ test ('cron', async () => {
 
 	process.on('exit', (code) => {
 		console.log('Process beforeExit event with code: ', code);
-	  });
+	});
 
 	const u = {id: 1}, a = [u], r = []
 
@@ -192,6 +203,44 @@ test ('cron', async () => {
 			name: 'q7',
 			request: {type: 'users'},
 			cron: '* * * * * *',
+			on: {
+				end:    function () {r.push (this.result)},
+				error:  function () {fail (this.error)},
+				finish: function () {a.shift ()},
+			}
+		})
+
+		q.on ('job-next', () => {
+			if (q.pending.size === 0) ok ()
+		})
+
+	})
+
+	app.emit ('finish')
+
+	expect (a).toHaveLength (0)
+	expect (r).toStrictEqual ([u])
+
+})
+
+test ('interval', async () => {
+
+	process.on('exit', (code) => {
+		console.log('Process beforeExit event with code: ', code);
+	});
+
+	const u = {id: 1}, a = [u], r = []
+
+	class TestQueue extends Queue {
+		async peek () {return a [0] || null}
+	}
+
+	await new Promise ((ok, fail) => {
+
+		const q = new TestQueue (app, {
+			name: 'q8',
+			request: {type: 'users'},
+			interval: 10,
 			on: {
 				end:    function () {r.push (this.result)},
 				error:  function () {fail (this.error)},
