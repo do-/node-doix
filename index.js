@@ -1,5 +1,6 @@
 module.exports = {
 	Application: require ('./lib/Application.js'),
+	Doser: require ('./lib/Doser.js'),
 	Job: require ('./lib/Job.js'),
 	Lag: require ('./lib/Lag.js'),
 	JobSource: require ('./lib/JobSource.js'),
