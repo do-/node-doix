@@ -68,3 +68,25 @@ test ('test 1', async () => {
 	expect (o).toEqual ({id: 'FileDirectoryQueue.js'})
 
 })
+
+test ('test E', async () => {
+
+	class Q extends FileDirectoryQueue {
+
+		constructor (app) {
+			super (app, {name: 'q4', dirname: Path.join (__dirname, 'data', 'root1', 'back', 'lib', 'Model', 'dw', '2_entities')})
+		}
+
+		test () {
+			throw Error ('DEBUG')
+		}
+
+	}
+
+	const q = new Q (app)
+
+	const o = await q.peek ()
+
+	expect (o).toBeNull ()
+
+})
