@@ -8,4 +8,5 @@ module.exports = {
 	NamingConventions: require ('./lib/NamingConventions.js'),
 	ResourcePool: require ('./lib/ResourcePool.js'),
 	LinkedQueue: require ('./lib/LinkedQueue.js'),
+	FileDirectoryQueue: require ('./lib/FileDirectoryQueue.js'),
 }
