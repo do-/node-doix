@@ -403,3 +403,28 @@ test ('job src fail', async () => {
 	}
 
 })
+
+test ('ensureLastJob', async () => {
+
+	const app = new Application ({modules, logger})
+	const svc = new JobSource (app, {name: 'svc'})
+
+	const j1 = svc.createJob ()
+	const j2 = svc.createJob ()
+
+	expect (svc.pending.size).toBe (2)
+
+	let flag = false
+
+	j2.ensureLastJob ().then (() => flag = true)
+
+	await j1.outcome ()
+
+	expect (flag).toBe (true)
+	expect (svc.pending.size).toBe (1)
+
+	await j2.outcome ()
+
+	expect (svc.pending.size).toBe (0)
+		
+})
