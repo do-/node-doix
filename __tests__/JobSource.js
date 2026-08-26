@@ -52,15 +52,7 @@ test ('lag', async () => {
 
 	const _ts = Date.now ()
 
-	await new Promise (ok => {
-
-		const nop = _ => _
-
-		job.on ('next', ok)
-
-		job.outcome ().then (nop, nop)
-
-	}) 	
+	await new Promise (ok => job.on ('next', ok).run ())
 
 	expect (Date.now () - _ts).toBeGreaterThanOrEqual (9)
 
