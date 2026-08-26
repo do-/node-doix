@@ -51,13 +51,60 @@ test ('constructor', () => {
 	expect (() => {new Application ({modules, logger, foo: 1})}).toThrow ()	
 	expect (() => {new Application ({modules, logger, pools: {db: {connectionString: '...'}}})}).toThrow ('ResourcePool')	
 	expect (() => {new Application ({modules, logger, namingConventions: 0})}).toThrow ()	
-	expect (new Application ({modules, logger, namingConventions: undefined})).toBeInstanceOf (Application)
+	expect (() => {new Application ({modules, logger, jobClass: null})}).toThrow ()
+	expect (() => {new Application ({modules, logger, jobClass: 0})}).toThrow ()
+	expect (() => {new Application ({modules, logger, jobClass: function (){}})}).toThrow ()
+	expect (() => {new Application ({modules, logger, jobClass: Application})}).toThrow ()
+	expect (new Application ({modules, logger, namingConventions: undefined, jobClass: Job})).toBeInstanceOf (Application)
 	expect (new Application ({modules, logger, namingConventions: new MS ()})).toBeInstanceOf (Application)
 
 	const app = new Application ({modules, logger, pools: {}})
 	
 	expect (app).toBeInstanceOf (Application)
 	expect (app.namingConventions).toBeInstanceOf (NamingConventions)
+
+})
+
+test ('app jobClass', () => {
+
+	const tag = Math.random ()
+	
+	const app = new Application ({
+		modules, 
+		logger, 
+		jobClass: class extends Job {
+			get tag () {
+				return tag
+			}
+		}
+	}), svc = new JobSource (app, {name: 'svc'})
+
+	const job = svc.createJob ()
+			
+	expect (job.tag).toBe (tag)
+
+})
+
+
+test ('src jobClass', () => {
+
+	const tag = Math.random ()
+
+	const app = new Application ({
+		modules, 
+		logger, 
+	}), svc = new JobSource (app, {
+		name: 'svc',
+		jobClass: class extends Job {
+			get tag () {
+				return tag
+			}
+		}
+	})
+
+	const job = svc.createJob ()
+			
+	expect (job.tag).toBe (tag)
 
 })
 
