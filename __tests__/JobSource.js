@@ -1,3 +1,4 @@
+const {randomUUID} = require ('crypto')
 const Path = require ('path')
 const {Lag, Application, JobSource} = require ('..')
 
@@ -73,7 +74,11 @@ test ('lag', async () => {
 
 test ('parent', async () => {
 
-	const app = new Application ({modules, logger})
+	const app = new Application ({modules, logger,
+			generators: {
+				id: randomUUID
+			},
+	})
 
 	const jobSource = new JobSource (app, {name: 's4'})
 
