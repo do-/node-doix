@@ -65,6 +65,32 @@ test ('constructor', () => {
 
 })
 
+test ('run', async () => {
+	
+	const app = new Application ({
+		modules, 
+		logger, 
+	})
+	
+	const svc = new JobSource (app, {name: 'svc'})
+
+	const id = Math.random ()
+
+	const parentJob = app.defaultJobSource.createJob ({})
+
+	const childJob = await new Promise ((ok) => {
+
+		svc.once ('job-end', ok)
+
+		parentJob.spawn ({type: 'users', id})
+
+	})
+
+	expect (childJob.parent).toBe (parentJob)
+	expect (childJob.result).toEqual ({id})
+
+})
+
 test ('app jobClass', () => {
 
 	const tag = Math.random ()
@@ -84,7 +110,6 @@ test ('app jobClass', () => {
 	expect (job.tag).toBe (tag)
 
 })
-
 
 test ('src jobClass', () => {
 
@@ -142,24 +167,26 @@ test ('job 0', async () => {
 	
 	const app = new Application ({modules, logger, handlers: {
 
-		init: _ => a.push (1),
+		// init: _ => a.push (1),
+		init: function () {a.push (this.request.id)},
 
 		finish: [
-			_ => a.push (2),
+			function () {a.push (this.parent.id)},
 			_ => a.push (3),
 		]
 
 	}})
-	
-	const svc = new JobSource (app, {name: 'svc'})
 
-	const job = svc.createJob ()
+	new JobSource (app, {name: 'svc'})
 
-	const r = await job.outcome ()
+	const parentJob = app.defaultJobSource.createJob ({})
+	parentJob.id = 222
+
+	const r = await parentJob.exec ({id: 1})
 	
 	expect (r).toBeUndefined ()
 
-	expect (a).toStrictEqual ([1, 2, 3])
+	expect (a).toStrictEqual ([1, 222, 3])
 
 })
 
