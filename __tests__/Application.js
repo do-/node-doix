@@ -449,6 +449,8 @@ test ('job src fail', async () => {
 		expect (last [k] === job).toBe (true)
 	}
 
+	expect (app.defaultJobSource.name).toBe ('jobSource0')
+
 })
 
 test ('ensureLastJob', async () => {
