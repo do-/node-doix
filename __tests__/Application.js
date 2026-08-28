@@ -235,6 +235,9 @@ test ('job ok', async () => {
 	expect (() => job.setMinLatency (-1)).toThrow ()
 	expect (() => job.setMinLatency (3.14)).toThrow ()
 	expect (() => job.setMinLatency (Infinity)).toThrow ()
+
+	job.emit ('info', 'TEST INFO')
+	job.emit ('warning', '!!!')
 	
 	job.setMinLatency (100)
 	job.setMaxLatency (10000)
@@ -263,9 +266,11 @@ test ('job ok', async () => {
 
 	const lines = s.trim ().split ('\n').map (s => s.trim ())
 
-	expect (lines).toHaveLength (2)
-	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 Users.getItem {"request":{"type":"users","id":28}}$/)
-	expect (lines [1]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 \d+ ms/)
+	expect (lines).toHaveLength (4)
+	expect (lines [0]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 TEST INFO/)
+	expect (lines [1]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} warn svc\/007 !!!/)
+	expect (lines [2]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 Users.getItem {"request":{"type":"users","id":28}}$/)
+	expect (lines [3]).toMatch (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} info svc\/007 \d+ ms/)
 
 })
 
