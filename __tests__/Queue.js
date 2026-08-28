@@ -140,6 +140,53 @@ test ('linked', async () => {
 
 })
 
+test ('doser', async () => {
+
+	const r = []
+
+	const q = new LinkedQueue (app, {
+		name: 'qd',
+		request: {type: 'users'},
+		on: {
+			end:    function () {r.push (this.request.data)},
+			error:  function () {fail (this.error)},
+		}
+		, doser: {
+			maxSize: 2,			
+		}
+	})
+
+	await new Promise ((ok, fail) => {
+
+		q.doser.on ('finish', () => {
+
+			q.on ('job-next', () => {
+				if (q.pending.size === 0) ok ()
+			})
+
+			if (q.pending.size === 0) ok ()
+
+		})
+
+		q.doser.push ({id: 1})
+		q.doser.push ({id: 2})
+		q.doser.push ({id: 3})
+		q.doser.push ({id: 4})
+		q.doser.push ({id: 5})
+
+		q.doser.stop ()
+
+	})
+
+	expect (r).toStrictEqual ([ 
+		[{id: 1}, {id: 2}], 
+		[{id: 3}, {id: 4}], 
+		[{id: 5}] 
+	])
+
+})
+
+
 test ('check ()', async () => {
 
 	const u = {id: 1}, a = [u], r = []
