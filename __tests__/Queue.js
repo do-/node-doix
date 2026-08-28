@@ -1,4 +1,6 @@
 const EventEmitter = require ('events')
+EventEmitter.defaultMaxListeners = 12
+
 const process = require('node:process')
 const Path = require ('path')
 const {Job, Application, Queue, LinkedQueue} = require ('..')
@@ -25,6 +27,19 @@ test ('bad', async () => {
 	expect (() => new Queue (app, {name: 'qx', interval: -1})).toThrow ('nvalid')
 	expect (() => new Queue (app, {name: 'qx', interval: 2147483648})).toThrow ('nvalid')
 	expect (() => new Queue (app, {name: 'qx', cron: '* * * * * *', interval: 10})).toThrow ('exclusive')
+
+})
+
+test ('stop', async () => {
+
+	const q = new Queue (app, {name: 'q000'})
+	expect (q.isStopped).toBe (false)
+
+	q.stop ()
+	expect (q.isStopped).toBe (true)
+
+	q.stop ()
+	expect (q.isStopped).toBe (true)
 
 })
 
@@ -174,7 +189,7 @@ test ('doser', async () => {
 		q.doser.push ({id: 4})
 		q.doser.push ({id: 5})
 
-		q.doser.stop ()
+		q.stop ()
 
 	})
 
