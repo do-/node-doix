@@ -500,9 +500,9 @@ test ('ensureLastJob', async () => {
 
 	let flag = false
 
-	j2.ensureLastJob ().then (() => flag = true)
+	const p = j2.ensureLastJob ().then (() => flag = true)
 
-	await j1.outcome ()
+	await Promise.all ([j1.outcome (), p])
 
 	expect (flag).toBe (true)
 	expect (svc.pending.size).toBe (1)
