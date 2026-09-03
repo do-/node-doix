@@ -485,7 +485,7 @@ test ('job src fail', async () => {
 
 })
 
-test ('ensureLastJob', async () => {
+test ('terminateAllOtherJobs', async () => {
 
 	const app = new Application ({modules, logger})
 	const svc = new JobSource (app, {name: 'svc'})
@@ -500,7 +500,7 @@ test ('ensureLastJob', async () => {
 
 	let flag = false
 
-	const p = j2.ensureLastJob ().then (() => flag = true)
+	const p = j2.terminateAllOtherJobs ().then (() => flag = true)
 
 	await Promise.all ([j1.outcome (), p])
 

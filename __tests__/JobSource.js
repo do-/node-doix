@@ -44,7 +44,7 @@ test ('lag', async () => {
 
 	const app = new Application ({modules, logger})
 
-	const jobSource = new JobSource (app, {lag: [11, Infinity], name: 's3'})
+	const jobSource = new JobSource (app, {lag: [15, Infinity], name: 's3'})
 
 	const job = jobSource.createJob ({type: 'userz', id: 1})
 
@@ -54,7 +54,7 @@ test ('lag', async () => {
 
 	await new Promise (ok => job.on ('next', ok).run ())
 
-	expect (Date.now () - _ts).toBeGreaterThanOrEqual (9)
+	expect (Date.now () - _ts).toBeGreaterThanOrEqual (10)
 
 	expect (() => jobSource.createJob ({type: 'users', id: 1})).toThrow (JobSource.LockedError)
 

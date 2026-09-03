@@ -189,7 +189,7 @@ test ('doser', async () => {
 		q.doser.push ({id: 4})
 		q.doser.push ({id: 5})
 
-		q.stop ()
+		q.doser.stop ()
 
 	})
 
@@ -198,6 +198,9 @@ test ('doser', async () => {
 		[{id: 3}, {id: 4}], 
 		[{id: 5}] 
 	])
+
+	q.stop ()
+	expect (q.maxPending).toBe (0)
 
 })
 
