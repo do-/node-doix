@@ -493,6 +493,9 @@ test ('ensureLastJob', async () => {
 	const j1 = svc.createJob ()
 	const j2 = svc.createJob ()
 
+	expect (j1.isPending).toBe (true)
+	expect (j2.isPending).toBe (true)
+
 	expect (svc.pending.size).toBe (2)
 
 	let flag = false
@@ -503,9 +506,13 @@ test ('ensureLastJob', async () => {
 
 	expect (flag).toBe (true)
 	expect (svc.pending.size).toBe (1)
+	expect (j1.isPending).toBe (false)
+	expect (j2.isPending).toBe (true)
 
 	await j2.outcome ()
 
 	expect (svc.pending.size).toBe (0)
+	expect (j1.isPending).toBe (false)
+	expect (j2.isPending).toBe (false)
 		
 })
