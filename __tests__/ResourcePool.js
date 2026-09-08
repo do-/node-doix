@@ -111,6 +111,36 @@ test ('set OK', async () => {
 
 })
 
+test ('close', async () => {
+
+	const pool = new MockPool ()
+	pool.name = 'mockPool'
+
+	expect (pool.cnt).toBe (0)
+
+	const job1 = new EventEmitter ()
+	
+	await pool.setResource (job1, 'db')	
+
+	expect (pool.cnt).toBe (1)
+
+	const job2 = new EventEmitter ()
+
+	await pool.close ()
+
+	try {
+
+		await pool.setResource (job2, 'db')	
+
+	}
+	catch (err) {
+
+		expect (err.message).toBe (`The pool 'mockPool' was already closed`)
+
+	}
+	
+})
+
 test ('set Error', async () => {
 
 	const pool = new MockPool ()
